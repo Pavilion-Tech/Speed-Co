@@ -20,7 +20,7 @@ class ImageZoom extends StatelessWidget {
       ),
       body: Center(
         child: InteractiveViewer(
-          child: ImageNet(image: image),
+          child: ImageNet(image: image,fit: null,),
         ),
       ),
     );

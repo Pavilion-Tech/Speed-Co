@@ -27,7 +27,7 @@ class ContactUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: defaultAppBar(context: context,title: tr('contact_us')),
+      appBar: defaultAppBar(context: context,title: tr('contact_us'),isMenu: true),
       body: BlocConsumer<MenuCubit,MenuStates>(
         listener: (c,s){
           if(s is ContactSuccessState)Navigator.pop(context);

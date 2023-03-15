@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:speed_co/layouts/provider_layout/cubit/provider_cubit.dart';
 import 'package:speed_co/shared/styles/colors.dart';
 
 class Categories extends StatefulWidget {
@@ -48,6 +49,7 @@ class _CategoriesState extends State<Categories> {
       onTap: (){
         setState(() {
           currentIndex = index;
+          ProviderCubit.get(context).getRequests(status: index);
         });
       },
       child: Container(

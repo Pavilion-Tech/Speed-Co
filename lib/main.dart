@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,8 @@ import 'package:speed_co/modules/provider/menu_screens/cubit/provider_menu_cubit
 import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_cubit.dart';
 import 'package:speed_co/shared/bloc_observer.dart';
 import 'package:speed_co/shared/components/constants.dart';
+import 'package:speed_co/shared/firebase_helper/firebase_options.dart';
+import 'package:speed_co/shared/firebase_helper/notification_helper.dart';
 import 'package:speed_co/shared/network/local/cache_helper.dart';
 import 'package:speed_co/shared/network/remote/dio.dart';
 import 'package:speed_co/shared/styles/colors.dart';
@@ -17,14 +21,25 @@ import 'modules/auth/auth_cubit/auth_cubit.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
+  NotificationHelper();
+  fcmToken = await  FirebaseMessaging.instance.getToken();
+  print(fcmToken);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await CacheHelper.init();
   DioHelper.init1();
   intro = CacheHelper.getData(key: 'intro');
+  userId = CacheHelper.getData(key: 'userId');
   token = CacheHelper.getData(key: 'token');
- // pToken = CacheHelper.getData(key: 'pToken');
+  pToken = CacheHelper.getData(key: 'pToken');
+  pToken = CacheHelper.getData(key: 'pToken');
+  String? local  = CacheHelper.getData(key: 'locale');
+  myLocale = local??'en';
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
+  print(token);
   BlocOverrides.runZoned(
         () {
       runApp(
@@ -49,11 +64,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => UserCubit()..getHomeData(),),
-        BlocProvider(create: (context) => AuthCubit(),),
-        BlocProvider(create: (context) => MenuCubit()..getUser()..getOrders()..getSettings()..getStaticPages(),),
-        BlocProvider(create: (context) => ProviderCubit()..getRequests(),),
-        BlocProvider(create: (context) => ProviderMenuCubit(),),
+        BlocProvider(create: (context) => UserCubit()..checkInterNet()..checkUpdate(context)..getHomeData()..getDate(),),
+        BlocProvider(create: (context) => AuthCubit()..checkInterNet(),),
+        BlocProvider(create: (context) => MenuCubit()..checkInterNet()..getUser()..getOrders()..getSettings()..getStaticPages(),),
+        BlocProvider(create: (context) => ProviderCubit()..checkInterNet()..checkUpdate(context)..getRequests()..getProvider()),
+        BlocProvider(create: (context) => ProviderMenuCubit()..checkInterNet()..getSettings()..getStaticPages()..chatHistory(),),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -77,4 +92,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

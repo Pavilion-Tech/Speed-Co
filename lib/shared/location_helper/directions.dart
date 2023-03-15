@@ -16,11 +16,11 @@ class DirectionsRepository{
     final response = await _dio!.get(
         _url,
         queryParameters: {
-          'origin':'${origin.latitude},${origin.longitude}',
-          'destination':'${destination.latitude},${destination.longitude}',
+          'origin':'${origin.latitude.toString()},${origin.longitude.toString()}',
+          'destination':'${destination.latitude.toString()},${destination.longitude.toString()}',
           'key':googleAPIKey
         }
-    );
+    ).catchError((e)=>print(e.toString()));
     if(response.statusCode==200){
       return Directions.fromMap(response.data);
     }

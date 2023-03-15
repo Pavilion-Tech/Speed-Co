@@ -113,7 +113,7 @@ class _VerificationSheetState extends State<VerificationSheet> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Stack(
-                  alignment: AlignmentDirectional.center,
+                  alignment: AlignmentDirectional.topCenter,
                   children: [
                     Image.asset(Images.verifyCurve),
                     Image.asset(
@@ -123,39 +123,42 @@ class _VerificationSheetState extends State<VerificationSheet> {
                       fit: BoxFit.cover,
                       color: Colors.white,
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          tr('verification'),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        if (!timerFinished)
+                    Align(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           Text(
-                            '00:$_start',
+                            tr('verification'),
                             style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.w600),
                           ),
-                        if (timerFinished)
-                          InkWell(
-                            onTap: () {
-                              AuthCubit.get(context).login();
-                              timer;
-                              _start = 60;
-                              timerFinished = false;
-                              startTimer();
-                            },
-                            child: Text(
-                              tr('try_again'),
-                              style: TextStyle(color: Colors.white),
+                          if (!timerFinished)
+                            Text(
+                              '00:$_start',
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
                             ),
-                          ),
-                      ],
+                          if (timerFinished)
+                            InkWell(
+                              onTap: () {
+                                AuthCubit.get(context).login();
+                                timer;
+                                _start = 60;
+                                timerFinished = false;
+                                startTimer();
+                              },
+                              child: Text(
+                                tr('try_again'),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -185,6 +188,7 @@ class _VerificationSheetState extends State<VerificationSheet> {
       children: [
         OTPWidget(
           otpC1,
+          autoFocus: myLocale == 'en'?true:false,
           onFinished: () {
             if (checkOTP() && myLocale != 'en') {
               submit(context);
@@ -195,6 +199,7 @@ class _VerificationSheetState extends State<VerificationSheet> {
         OTPWidget(otpC3),
         OTPWidget(
           otpC4,
+          autoFocus: myLocale == 'ar'?true:false,
           onFinished: () {
             if (checkOTP() && myLocale != 'ar') {
               submit(context);

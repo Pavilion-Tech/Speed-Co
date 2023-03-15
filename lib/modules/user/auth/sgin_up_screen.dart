@@ -5,6 +5,7 @@ import 'package:speed_co/modules/auth/auth_cubit/auth_states.dart';
 import 'package:speed_co/modules/auth/login_screen.dart';
 import 'package:speed_co/modules/item_shared/default_button.dart';
 import '../../../shared/components/components.dart';
+import '../../../shared/components/constants.dart';
 import '../../../shared/images/images.dart';
 import '../../auth/auth_cubit/auth_cubit.dart';
 import '../../item_shared/default_form.dart';
@@ -24,6 +25,7 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthStates>(
         listener: (context, state) {
+          if(isConnect!=null)checkNet(context);
           if(state is CreateUserSuccessState)
             navigateAndFinish(context, LoginScreen());
         },
@@ -80,6 +82,8 @@ class SignUpScreen extends StatelessWidget {
                                 child: DefaultForm(
                                   controller: phoneController,
                                   hint: tr('phone'),
+                                  textLength: 10,
+                                  filteringTextInputFormatter: true,
                                   type: TextInputType.phone,
                                   validator: (val){
                                     if(val.length < 10)return tr('password_poor');

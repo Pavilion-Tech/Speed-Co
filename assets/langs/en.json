@@ -72,7 +72,7 @@
   "order_history": "Order History",
   "next_week": "Next Week",
   "place_new": "Place New Request",
-  "wrong": "Something went wrong",
+  "wrong": "Something went wrong From Server",
   "name_empty": "Name Must Not Be Empty",
   "phone_empty": "Phone Number Must Not Be Empty",
   "location_empty": "Location Must Not Be Empty",
@@ -88,5 +88,18 @@
   "processing": "Processing",
   "completed": "Completed",
   "subject_empty": "Subject Must Not Be Empty",
-  "desc_empty": "Description Must Not Be Empty"
+  "desc_empty": "Description Must Not Be Empty",
+  "no_service_yet": "No Service Yet",
+  "no_requests_yet": "No Requests Yet",
+  "no_notifications_yet": "No Notifications Yet",
+  "select_service": "Select Service",
+  "update_title": "New Updates Are Available",
+  "update_desc": "We Have New Updates For Your App",
+  "update_now": "Update Now",
+  "no_net_title": "No Internet Connection",
+  "no_net_desc": "Make Sure Your Connection, And Try Again",
+  "reload": "Reload",
+  "maintenance_title": "App Is Closed For Maintenance",
+  "maintenance_desc": "We Are Making Some Fixes In the App For Improving the Quality Of Our Services",
+  "directions_wrong": "The distance is greater than the allowable limit"
 }

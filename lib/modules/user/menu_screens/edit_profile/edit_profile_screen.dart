@@ -18,7 +18,6 @@ import '../menu_cubit/menu_cubit.dart';
 
 class EditProfileScreen extends StatelessWidget {
    EditProfileScreen({Key? key}) : super(key: key);
-   TextEditingController addressController = TextEditingController();
    TextEditingController nameController = TextEditingController();
    TextEditingController emailController = TextEditingController();
    TextEditingController latController = TextEditingController();
@@ -27,15 +26,8 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if(MenuCubit.get(context).userModel!.data!.currentLatitude!.isNotEmpty)
-    MenuCubit.get(context).getAddress(
-        controller: addressController,
-        latLng: LatLng(
-            double.parse(MenuCubit.get(context).userModel!.data!.currentLatitude!),
-            double.parse(MenuCubit.get(context).userModel!.data!.currentLongitude!)
-        )
-    );
     nameController.text = MenuCubit.get(context).userModel!.data!.name!;
-    emailController.text = MenuCubit.get(context).userModel!.data!.email!;
+    emailController.text = MenuCubit.get(context).userModel!.data!.email??'';
     return BlocConsumer<MenuCubit, MenuStates>(
   listener: (context, state) {
     if(state is UpdateUserSuccessState)Navigator.pop(context);
@@ -43,7 +35,7 @@ class EditProfileScreen extends StatelessWidget {
   builder: (context, state) {
     var cubit = MenuCubit.get(context);
     return Scaffold(
-      appBar: defaultAppBar(context: context,title:tr('profile_info')),
+      appBar: defaultAppBar(context: context,title:tr('profile_info'),isMenu: true),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
@@ -88,13 +80,13 @@ class EditProfileScreen extends StatelessWidget {
               DefaultForm(
                 hint: tr('location'),
                 isRead: true,
-                controller: addressController,
+                controller: cubit.addressController,
                 onTap: ()async{
                   await cubit.getCurrentLocation();
                   if(cubit.position!=null){
                     navigateTo(context, MapAddressScreen(
                         cubit.position!,
-                        addressController,
+                      cubit.addressController,
                       lat: latController,
                       lng: lngController,
                     ));

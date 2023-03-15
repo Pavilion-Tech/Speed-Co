@@ -17,7 +17,7 @@ class AboutUsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: defaultAppBar(context: context, title: tr('about_us')),
+          appBar: defaultAppBar(context: context, title: tr('about_us'),isMenu: true),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),

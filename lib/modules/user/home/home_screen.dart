@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
 import 'package:speed_co/modules/item_shared/default_button.dart';
@@ -10,7 +11,6 @@ import 'package:speed_co/shared/images/images.dart';
 import '../widgets/home/category_widget.dart';
 import '../widgets/home/home_products.dart';
 import '../widgets/home/top_home.dart';
-import '../widgets/item_shared/grid_products.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,25 +23,39 @@ class HomeScreen extends StatelessWidget {
       fallback: (context)=>HomeShimmer(),
       builder: (context)=>  Stack(
         children: [
-          Stack(
-            children: [
-              Image.asset(Images.homeCurve),
-              SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
+          Image.asset(Images.curveHomeAppbar),
+          SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () {
+                    return Future.delayed(Duration.zero,(){
+                      UserCubit.get(context).getHomeData();
+                    });
+                  },
+                ),
+                SliverToBoxAdapter(
+                  child: Stack(
                     children: [
-                      TopHome(),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: SearchWidget(readOnly: true),
+                      Image.asset(Images.homeCurve,height: 300,width: double.infinity,fit: BoxFit.cover,),
+                      SafeArea(
+                        child: Column(
+                          children: [
+                            TopHome(),
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: SearchWidget(readOnly: true),
+                            ),
+                            CategoryWidget(),
+                            HomeProducts()
+                          ],
+                        ),
                       ),
-                      CategoryWidget(),
-                      HomeProducts()
                     ],
                   ),
-                ),
-              ),
-            ],
+                )
+              ],
+            ),
           ),
           Align(
             alignment: AlignmentDirectional.bottomCenter,

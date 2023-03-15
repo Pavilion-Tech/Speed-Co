@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:speed_co/models/chat_history_model.dart';
 
 import '../../../../../shared/components/components.dart';
 import '../../../../../shared/styles/colors.dart';
 import '../../../menu_screens/chat/chat_screen.dart';
 
 class ChatHistoryItem extends StatelessWidget {
-  const ChatHistoryItem({Key? key}) : super(key: key);
+  ChatHistoryItem(this.data);
+  ChatHistoryData data;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: ()=>navigateTo(context, ChatScreen()),
+      onTap: ()=>navigateTo(context, ChatScreen(data.itemNumber.toString(),data.id??'')),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
            Row(
              children: [
                Expanded(
                  child: Text(
-                   '112233',
+                   '${data.providerName??''}#${data.itemNumber??''}',
                    style: TextStyle(color: defaultColorTwo,fontWeight: FontWeight.w700,fontSize: 16),
                  ),
                ),
                Text(
-                 '2 Hours ago',
+                 data.createdAt??'',
                  style: TextStyle(color: defaultColorTwo,fontSize: 8),
                ),
              ],
            ),
             Text(
-              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+              data.messages?[0].message??'',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: defaultColorTwo,fontSize: 9),

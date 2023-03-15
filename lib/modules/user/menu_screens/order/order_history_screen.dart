@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speed_co/models/user/orders_model.dart';
@@ -15,11 +16,21 @@ import '../../../item_shared/no_items/no_requests.dart';
 import '../../widgets/shimmers/order_shimmer.dart';
 import 'order_detail_screen.dart';
 
-class OrderHistoryScreen extends StatelessWidget {
+class OrderHistoryScreen extends StatefulWidget {
   OrderHistoryScreen({this.haveAppbar = true});
 
   bool haveAppbar;
 
+  @override
+  State<OrderHistoryScreen> createState() => _OrderHistoryScreenState();
+}
+
+class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
+  @override
+  void initState() {
+    MenuCubit.get(context).getOrders();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MenuCubit, MenuStates>(
@@ -28,7 +39,7 @@ class OrderHistoryScreen extends StatelessWidget {
     var cubit = MenuCubit.get(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar:haveAppbar? defaultAppBar(context: context,title: tr('request_history'),colorIsDefault: false):null,
+      appBar:widget.haveAppbar? defaultAppBar(context: context,title: tr('request_history'),colorIsDefault: false,isMenu: true):null,
       body: Stack(
         children: [
           Image.asset(Images.homeCurve),
@@ -44,12 +55,33 @@ class OrderHistoryScreen extends StatelessWidget {
                   return Column(
                     children: [
                       Expanded(
-                        child: ListView.separated(
-                            itemBuilder: (c,i)=>itemBuilder(context, cubit.ordersModel!.data!.data![i]),
-                            padding:const EdgeInsets.all(20),
-                            controller:cubit.orderScrollController,
-                            separatorBuilder: (c,i)=>const SizedBox(height: 20,),
-                            itemCount:  cubit.ordersModel!.data!.data!.length
+                        child: CustomScrollView(
+                          slivers: [
+                            CupertinoSliverRefreshControl(
+                              onRefresh: () {
+                                return Future.delayed(Duration.zero,(){
+                                  MenuCubit.get(context).getOrders();
+                                });
+                              },
+                            ),
+                            SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                            (c,i)=>Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: itemBuilder(context, cubit.ordersModel!.data!.data![i]),
+                            ),
+                                  childCount: cubit.ordersModel!.data!.data!.length,
+                            )
+                            ),
+                            // ListView.separated(
+                            //     itemBuilder:
+                            //     padding:const EdgeInsets.all(20),
+                            //     physics: NeverScrollableScrollPhysics(),
+                            //     controller:cubit.orderScrollController,
+                            //     separatorBuilder: (c,i)=>const SizedBox(height: 20,),
+                            //     itemCount:  cubit.ordersModel!.data!.data!.length
+                            // ),
+                          ],
                         ),
                       ),
                       if(state is GetOrderLoadingState)
@@ -100,7 +132,7 @@ class OrderHistoryScreen extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '${data.itemNumber}',
+                        '#${data.itemNumber}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color:defaultColorTwo,fontSize: 16,fontWeight: FontWeight.w500),
@@ -118,7 +150,7 @@ class OrderHistoryScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          data.description??'',
+                          data.serviceTitle??'',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 11,fontWeight: FontWeight.w500),

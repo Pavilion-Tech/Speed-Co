@@ -64,6 +64,7 @@ class Images{
   static const String track = 'assets/images/track.png';
   static const String person2 = 'assets/images/person2.png';
   static const String share = 'assets/images/share.png';
+  static const String curveHomeAppbar = 'assets/images/curve_home_appbar.png';
 
 
 

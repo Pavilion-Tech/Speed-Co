@@ -32,16 +32,16 @@ class MenuDrawer extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child:cubit.userModel!=null?ImageNet(image: cubit.userModel!.data!.personalPhoto!): Image.asset(Images.homePhoto, fit: BoxFit.cover,),
+                    child:cubit.userModel!=null?ImageNet(image: cubit.userModel!.data!.personalPhoto!): SizedBox(),
                   ),
                   if(cubit.userModel!=null)
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: Text(
-                      cubit.userModel!.data!.phoneNumber!,
+                      cubit.userModel!.data!.name!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.black,fontSize: 35,fontWeight: FontWeight.w600),
+                      style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w600),
                     ),
                   ),
                   Expanded(

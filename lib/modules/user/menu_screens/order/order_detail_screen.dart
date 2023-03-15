@@ -9,10 +9,10 @@ import 'package:speed_co/modules/user/menu_screens/order/track_request_screen.da
 import 'package:speed_co/shared/components/components.dart';
 import 'package:speed_co/shared/components/constants.dart';
 import 'package:speed_co/shared/styles/colors.dart';
-
 import '../../../../models/user/orders_model.dart';
 import '../../../../shared/images/images.dart';
 import '../../../item_shared/image_zoom.dart';
+import 'order_details_appbar.dart';
 
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -21,13 +21,14 @@ class OrderDetailsScreen extends StatelessWidget {
   String status;
   @override
   Widget build(BuildContext context) {
+    var cubit = MenuCubit.get(context);
     return Scaffold(
       body: Stack(
         children: [
           Image.asset(Images.homeCurve,height: 300,width:double.infinity,fit: BoxFit.cover,),
           Column(
             children: [
-              defaultAppBar(context: context,colorIsDefault: false),
+              OrderDetailsAppBar(data.id!,data.status!,data.itemNumber.toString()),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -36,23 +37,29 @@ class OrderDetailsScreen extends StatelessWidget {
                       children: [
                         SizedBox(
                             width: 234,height: 200,
-                            child:ImageNet(image: data.serviceImage??'',width: 234,height: 266)),
+                            child:ImageNet(image: data.serviceImage??'',width: 234,height: 266)
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
                           child: Text(
-                            data.description??'',
+                            data.serviceTitle??'',
                             style: TextStyle(color: defaultColorTwo,fontSize: 23,fontWeight: FontWeight.w600),
                           ),
                         ),
+                        if(data.status==2)
                         DefaultButton(
                           text: tr('track'),
-                          onTap: (){
-                            MenuCubit.get(context).getDirections(
-                                origin: LatLng(25.019083,55.121239),
-                                destination: LatLng(25.081009, 55.242082)
-                            );
-                            navigateTo(context, TrackRequestScreen());
-                          },
+                            onTap: ()async{
+                            cubit.getSingleOrder(data.id??'');
+                              await cubit.getCurrentLocation();
+                              if(cubit.position!=null){
+                                cubit.getDirections(
+                                    origin: LatLng(cubit.position!.latitude,cubit.position!.longitude),
+                                    destination: LatLng(double.parse(data.providerLatitude!), double.parse(data.providerLongitude!))
+                                );
+                                navigateTo(context, TrackRequestScreen(data.id!));
+                              }
+                            },
                           width: size!.width*.8,),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -63,7 +70,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${data.itemNumber}',
+                                      '#${data.itemNumber}',
                                       style: TextStyle(color: defaultColorTwo,fontSize: 25,fontWeight: FontWeight.w600),
                                     ),
                                     Text(
@@ -102,9 +109,14 @@ class OrderDetailsScreen extends StatelessWidget {
                             subText: data.time??''
                           ),
                         ),
-                        itemBuilder(
-                            image: Images.problemDesc,
-                            text:tr('problem_description'),
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(
+                            tr('problem_description'),
+                            style: TextStyle(
+                                color: defaultColorTwo,fontWeight: FontWeight.w700
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),

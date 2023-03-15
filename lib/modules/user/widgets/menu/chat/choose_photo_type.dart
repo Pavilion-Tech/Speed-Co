@@ -13,7 +13,8 @@ import '../image_bottom.dart';
 
 
 class ChoosePhotoType extends StatefulWidget {
-
+  ChoosePhotoType(this.id);
+  String id;
 
 
   @override
@@ -32,7 +33,7 @@ class _ChoosePhotoTypeState extends State<ChoosePhotoType> {
   Widget build(BuildContext context) {
     return BlocConsumer<MenuCubit, MenuStates>(
       listener: (context, state) {
-      //  if(state is SendMessageSuccessState)Navigator.pop(context);
+        if(state is SendMessageSuccessState)Navigator.pop(context);
       },
       builder: (context, state) {
         var cubit = MenuCubit.get(context);
@@ -78,10 +79,14 @@ class _ChoosePhotoTypeState extends State<ChoosePhotoType> {
               if(cubit.chatImage!=null)
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
-                  child:DefaultButton(
+                  child:state is! SendMessageLoadingState ?DefaultButton(
                       text: tr('send'),
-                      onTap: ()=>Navigator.pop(context)
-                  ),
+                      onTap: (){
+                        cubit.sendMessage(
+                            id: widget.id, type: 2
+                        );
+                      }
+                      ):CircularProgressIndicator(),
                 ),
             ],
           ),

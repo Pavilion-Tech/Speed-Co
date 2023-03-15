@@ -32,13 +32,7 @@ class AccountSettings extends StatelessWidget {
                 image: Images.orderHistory,
                 title: tr('order_history'),
                 onTap: () => navigateTo(context, OrderHistoryScreen())),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: itemBuilder(
-                  image: Images.support,
-                  title: tr('technical_support'),
-                  onTap: () => navigateTo(context, ChatScreen())),
-            ),
+            const SizedBox(height: 20,)
           ],
         ),
       ],

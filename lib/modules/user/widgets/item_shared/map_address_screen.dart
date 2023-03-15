@@ -13,11 +13,12 @@ import '../../../item_shared/default_button.dart';
 import '../../../item_shared/default_form.dart';
 
 class MapAddressScreen extends StatefulWidget {
-  MapAddressScreen(this.position,this.controller,{this.lat,this.lng});
+  MapAddressScreen(this.position,this.controller,{this.lat,this.lng,this.isDialog = false});
   Position position;
   TextEditingController controller;
   TextEditingController? lat;
   TextEditingController? lng;
+  bool isDialog;
 
   @override
   State<MapAddressScreen> createState() => _MapAddressScreenState();
@@ -189,6 +190,7 @@ class _MapAddressScreenState extends State<MapAddressScreen> {
                         onTap: (){
                           UserCubit.get(context).emitState();
                           Navigator.pop(context);
+                          if(widget.isDialog)Navigator.pop(context);
                         }
                     )
                   ],

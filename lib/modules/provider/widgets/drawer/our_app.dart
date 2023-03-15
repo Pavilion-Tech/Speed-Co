@@ -11,6 +11,7 @@ import '../../../item_shared/delete_dialog.dart';
 import '../../../user/widgets/menu/lang.dart';
 import '../../menu_screens/aboutus_screen.dart';
 import '../../menu_screens/contactus_screen.dart';
+import '../../menu_screens/cubit/provider_menu_cubit.dart';
 import '../../menu_screens/terms_screen.dart';
 
 
@@ -77,7 +78,9 @@ class OurApp extends StatelessWidget {
               child: DefaultButton(
                   text: tr('logout'),
                   width: size!.width*.5,
-                  onTap: (){}
+                  onTap: (){
+                    ProviderMenuCubit.get(context).logout(context: context);
+                  }
               ),
             ),
             TextButton(
@@ -85,7 +88,7 @@ class OurApp extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context)=>DeleteDialog((){
-                        navigateAndFinish(context, SplashScreen());
+                        ProviderMenuCubit.get(context).logout(context: context,destroy: 2);
                       })
                   );
                 },

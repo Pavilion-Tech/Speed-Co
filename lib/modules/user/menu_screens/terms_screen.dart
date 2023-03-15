@@ -18,7 +18,7 @@ class TermsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: defaultAppBar(context: context, title: tr('terms')),
+          appBar: defaultAppBar(context: context, title: tr('terms'),isMenu: true),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),

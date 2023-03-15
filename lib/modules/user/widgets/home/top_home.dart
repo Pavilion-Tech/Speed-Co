@@ -101,7 +101,8 @@ class TopHome extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10,),
-          Expanded(child: ImageNet(image:model.backgroundImage??''))
+          if(model.backgroundImage!.isNotEmpty)
+          Expanded(child: ImageNet(image:model.backgroundImage??'',havePlaceholder: false,))
         ],
       ),
     );

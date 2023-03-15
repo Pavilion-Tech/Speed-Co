@@ -5,6 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
 import 'package:speed_co/modules/user/menu_screens/chat/chat_history_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../modules/auth/login_screen.dart';
+import '../../modules/item_shared/wrong_screens/no_net_screen.dart';
+import '../../modules/user/menu_screens/menu_cubit/menu_cubit.dart';
 import '../../modules/user/menu_screens/notification_screen.dart';
 import '../../modules/user/widgets/item_shared/map_address_screen.dart';
 import '../images/images.dart';
@@ -73,9 +76,9 @@ Future showToast ({required String msg , bool? toastState})
 
 
 
-checkNet(context) {
+checkNet(context,{bool isUser = true}) {
   if (!isConnect!) {
-   // navigateTo(context,const NoNetScreen(),);
+    navigateTo(context,NoNetScreen(isUser: isUser),);
   }
 }
 
@@ -83,6 +86,7 @@ PreferredSizeWidget defaultAppBar({
   required BuildContext context,
   bool colorIsDefault = true,
   bool haveChat = true,
+  bool isMenu = false,
   bool haveNotification = true,
   bool haveLocation = false,
   String title = ''
@@ -126,12 +130,21 @@ PreferredSizeWidget defaultAppBar({
     backgroundColor: Colors.transparent,
     leading: IconButton(
       icon: Icon(Icons.arrow_back,color: colorIsDefault?defaultColor: Colors.white,),
-      onPressed: ()=>Navigator.pop(context),
-    ),
+        onPressed: (){
+          Navigator.pop(context);
+          if(isMenu)Navigator.pop(context);
+        }    ),
     actions: [
       if(haveChat)
       InkWell(
-        onTap: ()=>navigateTo(context, ChatHistoryScreen()),
+        onTap: (){
+          if(token!=null){
+            MenuCubit.get(context).chatHistory();
+            navigateTo(context, ChatHistoryScreen());
+          }else{
+            navigateTo(context, LoginScreen(haveArrow: true,));
+          }
+        },
           child: Image.asset(Images.chat,width: 24,height: 24,color: colorIsDefault?defaultColor: Colors.white,)),
       if(!haveNotification)
         const SizedBox(width: 30,),
@@ -149,7 +162,8 @@ PreferredSizeWidget defaultAppBar({
 
 PreferredSizeWidget pDefaultAppBar({
   required BuildContext context,
-  required String title
+  required String title,
+  bool isMenu = false
 }){
   return AppBar(
     elevation: 0,
@@ -161,7 +175,10 @@ PreferredSizeWidget pDefaultAppBar({
     backgroundColor: Colors.transparent,
     leading: IconButton(
       icon: Icon(Icons.arrow_back,color: defaultColor),
-      onPressed: ()=>Navigator.pop(context),
+      onPressed: (){
+        Navigator.pop(context);
+        if(isMenu)Navigator.pop(context);
+      }
     ),
   );
 }

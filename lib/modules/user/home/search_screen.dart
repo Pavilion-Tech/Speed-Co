@@ -32,6 +32,7 @@ class SearchScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: SearchWidget(
+                      autoPlay: true,
                       onChanged: (val){
                         if(val.isNotEmpty){
                           UserCubit.get(context).searchService(val);
@@ -42,6 +43,7 @@ class SearchScreen extends StatelessWidget {
                           }
                         }
                       },
+
                     ),
                   ),
                   Expanded(

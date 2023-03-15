@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
+import 'package:speed_co/layouts/user_layout/user_layout.dart';
 import 'package:speed_co/modules/user/widgets/item_shared/map_address_screen.dart';
 import '../../../../shared/components/components.dart';
 import '../../../../shared/images/images.dart';
@@ -42,6 +43,7 @@ class PlaceOrderDialog extends StatelessWidget {
                             cubit.addressController,
                             lat: cubit.latController,
                             lng: cubit.lngController,
+                            isDialog:true
                           )
                       );
                     }
@@ -50,7 +52,8 @@ class PlaceOrderDialog extends StatelessWidget {
             ),
             InkWell(
               onTap: (){
-                Navigator.pop(context);
+                UserCubit.get(context).images=[];
+                navigateAndFinish(context, UserLayout());
               },
               child: Container(
                 height: 51,

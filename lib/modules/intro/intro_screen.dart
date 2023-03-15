@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:speed_co/layouts/user_layout/user_layout.dart';
 import 'package:speed_co/shared/components/components.dart';
 import 'package:speed_co/shared/components/constants.dart';
 import 'package:speed_co/shared/images/images.dart';
@@ -42,30 +43,38 @@ class IntroScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(
-            height: 750,
+          Expanded(
             child: PageView.builder(
                 itemCount: listIntro.length,
                 controller: controller,
-                itemBuilder: (c,i)=>Column(
+                itemBuilder: (c,i)=>Stack(
+                 // mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset(listIntro[i].image),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            listIntro[i].title,
-                            textAlign: TextAlign.center,
-                            style:const TextStyle(color: Colors.black,fontWeight: FontWeight.w700,fontSize: 22,height: 1),
+                    Image.asset(listIntro[i].image,),
+                    Align(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      child: Container(
+                        color: Colors.white38,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 30.0,left: 30,top: 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                listIntro[i].title,
+                                textAlign: TextAlign.center,
+                                style:const TextStyle(color: Colors.black,fontWeight: FontWeight.w700,fontSize: 22,height: 1),
+                              ),
+                              Text(
+                                listIntro[i].desc,
+                                textAlign: TextAlign.center,
+                                maxLines: 3,
+                                style:const TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
+                              ),
+                            ],
                           ),
-                          Text(
-                            listIntro[i].desc,
-                            textAlign: TextAlign.center,
-                            maxLines: 3,
-                            style:const TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -73,7 +82,7 @@ class IntroScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.only(right: 30.0,left: 30,bottom: 30),
             child: Stack(
               alignment: AlignmentDirectional.center,
               children: [
@@ -96,7 +105,7 @@ class IntroScreen extends StatelessWidget {
                         if(controller.page == 1.0){
                           intro = true;
                           CacheHelper.saveData(key: 'intro', value: intro);
-                          navigateAndFinish(context,const JoinAsScreen());
+                          navigateAndFinish(context,UserLayout());
                         }else{
                           controller.animateTo(
                               controller.position.maxScrollExtent,

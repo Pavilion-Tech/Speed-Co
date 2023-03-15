@@ -7,18 +7,21 @@ import 'package:speed_co/modules/item_shared/default_button.dart';
 import 'package:speed_co/modules/auth/verify_bottomsheet.dart';
 import 'package:speed_co/shared/components/components.dart';
 
+import '../../shared/components/constants.dart';
 import '../../shared/images/images.dart';
 import '../intro/join_as_screen.dart';
 import '../item_shared/default_form.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({this.haveArrow = false});
   var formKey = GlobalKey<FormState>();
+  bool haveArrow ;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthStates>(
       listener: (context, state) {
+        if(isConnect!=null)checkNet(context);
         if (state is LoginSuccessState)
           showModalBottomSheet(
               context: context,
@@ -28,6 +31,15 @@ class LoginScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: true,
+          extendBodyBehindAppBar: true,
+          appBar: haveArrow?AppBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: ()=>Navigator.pop(context),
+              icon: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,),
+            ),
+          ):null,
           body: Form(
             key: formKey,
             child: Column(
@@ -36,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                   height: 270,
                   width: double.infinity,
                   child: Stack(
-                    alignment: AlignmentDirectional.center,
+                    alignment: AlignmentDirectional.topCenter,
                     children: [
                       Image.asset(
                         Images.curve,
@@ -49,12 +61,15 @@ class LoginScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                         width: double.infinity,
                       ),
-                      Text(
-                        tr('sign_in'),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w600),
+                      Align(
+                        alignment: AlignmentDirectional.center,
+                        child: Text(
+                          tr('sign_in'),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
                     ],
                   ),
@@ -66,6 +81,7 @@ class LoginScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(30.0),
                           child: DefaultForm(
+                            filteringTextInputFormatter: true,
                             hint: tr('phone'),
                             textLength: 10,
                             validator: (val) {

@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../layouts/provider_layout/cubit/provider_cubit.dart';
+import '../../../../models/provider/request_model.dart';
 import '../../../../shared/components/components.dart';
 import '../../../../shared/images/images.dart';
 import '../../../../shared/styles/colors.dart';
 
 class Details extends StatelessWidget {
-  const Details({Key? key}) : super(key: key);
-
+  Details(this.data);
+  RequestData data;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,7 +19,7 @@ class Details extends StatelessWidget {
         children: [
           Image.asset(Images.person2,width: 20,),
           Text(
-            'Marwan Sayed ',
+            data.userName??'',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(color: defaultColorTwo,fontSize: 23,fontWeight: FontWeight.w500),
@@ -28,14 +30,14 @@ class Details extends StatelessWidget {
           Row(
             children: [
               Text(
-                '+20 1122711137',
+                data.userPhone??'',
                 maxLines: 1,
                 style: TextStyle(color: defaultColorTwo,fontSize: 19),
               ),
               const Spacer(),
               InkWell(
                 onTap: (){
-                  String phone = '+971562222338';
+                  String phone = data.userPhone??'';
                   final Uri launchUri = Uri(
                     scheme: 'tel',
                     path: phone,
@@ -43,23 +45,6 @@ class Details extends StatelessWidget {
                   openUrl(launchUri.toString());
                   },
                   child: Image.asset(Images.phone5,width: 44,)),
-              const SizedBox(width: 20,),
-              InkWell(
-                  onTap: () {
-                    String phone = '+971562222338';
-                    String url() {
-                      if (Platform.isAndroid) {
-                        return "https://wa.me/$phone/?text=hello"; // new line
-                      } else {
-                        return "https://api.whatsapp.com/send?phone=$phone"; // new line
-                      }
-                    }
-
-                    String waUrl = url();
-                    openUrl(waUrl);
-                  },
-                  child: Image.asset(Images.whats5,width: 44,)
-              ),
             ],
           ),
           const SizedBox(height: 5,),
@@ -67,11 +52,15 @@ class Details extends StatelessWidget {
           const SizedBox(height: 15,),
           InkWell(
             onTap: ()async{
-              String googleUrl =
-                  'https://www.google.com/maps/dir/?api=1&origin=25.019083,55.121239&destination=25.019083,55.111239';
-              print(googleUrl);
-              if (await canLaunch(googleUrl)) {
-              await launch(googleUrl);
+              var cubit = ProviderCubit.get(context);
+              await cubit.getCurrentLocation();
+              if(cubit.position!=null){
+                String googleUrl =
+                    'https://www.google.com/maps/dir/?api=1&origin=${cubit.position!.latitude},${cubit.position!.longitude}&destination=${data.userLatitude},${data.userLongitude}';
+                print(googleUrl);
+                if (await canLaunch(googleUrl)) {
+                  await launch(googleUrl);
+                }
               }
             },
             child: Column(
@@ -81,7 +70,7 @@ class Details extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Text(
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                    data.userAddress??'',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: defaultColorTwo,fontSize: 13,height: 1),
@@ -100,7 +89,7 @@ class Details extends StatelessWidget {
                   children: [
                     Image.asset(Images.requestDate,width: 20,),
                     Text(
-                      '25/12/2023',
+                      data.date??'',
                       maxLines: 1,
                       style: TextStyle(color: defaultColorTwo,fontSize: 13),
                     ),
@@ -114,7 +103,7 @@ class Details extends StatelessWidget {
                     children: [
                       Image.asset(Images.requestTime,width: 20,),
                       Text(
-                        '15:30 PM',
+                        data.time??'',
                         maxLines: 1,
                         style: TextStyle(color: defaultColorTwo,fontSize: 13),
                       ),

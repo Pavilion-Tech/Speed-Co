@@ -7,6 +7,7 @@ import 'package:speed_co/modules/item_shared/default_button.dart';
 import 'package:speed_co/shared/styles/colors.dart';
 
 import '../../../shared/components/components.dart';
+import '../../../shared/components/constants.dart';
 import '../../../shared/images/images.dart';
 import '../../auth/auth_cubit/auth_cubit.dart';
 import '../../auth/auth_cubit/auth_states.dart';
@@ -31,6 +32,7 @@ class ProviderSignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthStates>(
   listener: (context, state) {
+    if(isConnect!=null)checkNet(context,isUser: false);
     if(state is CreateProviderSuccessState)
       navigateAndFinish(context, LoginScreen());
   },
@@ -78,6 +80,7 @@ class ProviderSignUpScreen extends StatelessWidget {
                             child: DefaultForm(
                               controller: phoneController,
                               hint: tr('phone'),
+                              filteringTextInputFormatter: true,
                               textLength: 10,
                               type: TextInputType.phone,
                               validator: (val){

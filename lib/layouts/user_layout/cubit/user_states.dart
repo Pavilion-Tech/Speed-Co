@@ -4,6 +4,8 @@ class InitState extends UserStates {}
 
 class EmitState extends UserStates {}
 
+class ImageWrong extends UserStates {}
+
 class ImagesPickedState extends UserStates {}
 
 class ChangeIndexState extends UserStates {}
@@ -31,3 +33,8 @@ class SearchLoadingState extends UserStates {}
 class SearchSuccessState extends UserStates {}
 class SearchWrongState extends UserStates {}
 class SearchErrorState extends UserStates {}
+
+
+class DateSuccessState extends UserStates {}
+class DateWrongState extends UserStates {}
+class DateErrorState extends UserStates {}

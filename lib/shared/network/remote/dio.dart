@@ -28,7 +28,7 @@ class DioHelper {
 
     dio.options.headers =
     {
-      'lang' : lang,
+      'Accept-Language' : lang,
       'Authorization':token ,
       'Content-Type': 'application/json'
     };
@@ -49,6 +49,7 @@ class DioHelper {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization':token ,
+      'Accept-Language':lang ,
 
     };
 
@@ -70,6 +71,7 @@ class DioHelper {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization':token ,
+      'Accept-Language':lang ,
 
     };
 
@@ -88,9 +90,9 @@ class DioHelper {
   }) async {
     dio.options.headers =
     {
-      'lang' : lang,
+      'Accept-Language' : lang,
       'Authorization':token ,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
     return response = await dio.put(url, data: formData??data);
   }
@@ -105,7 +107,7 @@ class DioHelper {
   }) async {
     dio.options.headers =
     {
-      'lang' : lang,
+      'Accept-Language' : lang,
       'Authorization':token ,
       'Content-Type': 'application/json'
     };

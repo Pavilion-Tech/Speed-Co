@@ -11,7 +11,8 @@ class DefaultForm extends StatelessWidget {
     this.isRead = false,
     this.onChange,
     this.validator,
-    this.textLength
+    this.textLength,
+    this.filteringTextInputFormatter
 });
   String hint;
   Widget? suffix;
@@ -21,6 +22,7 @@ class DefaultForm extends StatelessWidget {
   ValueChanged<String>? onChange;
   FormFieldValidator? validator;
   int? textLength;
+  bool? filteringTextInputFormatter;
 
   TextEditingController? controller;
   @override
@@ -49,6 +51,8 @@ class DefaultForm extends StatelessWidget {
               onChanged: onChange,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(textLength),
+                if(filteringTextInputFormatter!=null)FilteringTextInputFormatter.digitsOnly,
+
               ],
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(

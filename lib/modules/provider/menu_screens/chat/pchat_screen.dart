@@ -1,0 +1,66 @@
+import 'dart:async';
+
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_cubit.dart';
+import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_states.dart';
+import '../../../../shared/images/images.dart';
+import '../../widgets/menu/chat/chat_appbar.dart';
+import '../../widgets/menu/chat/chat_body.dart';
+import '../../widgets/menu/chat/chat_bottom.dart';
+import '../cubit/provider_menu_cubit.dart';
+import '../cubit/provider_menu_states.dart';
+
+class PChatScreen extends StatefulWidget {
+  PChatScreen(this.id,this.orderId);
+
+  String id;
+  String orderId;
+
+  @override
+  State<PChatScreen> createState() => _PChatScreenState();
+}
+
+class _PChatScreenState extends State<PChatScreen> {
+  late Timer timer;
+  @override
+  void initState() {
+    timer = Timer(Duration(seconds: 5), () {
+      ProviderMenuCubit.get(context).chat(widget.orderId);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: chatAppBar(context, widget.id),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: BlocConsumer<ProviderMenuCubit, ProviderMenuStates>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            return Column(
+              children: [
+                Expanded(child: PChatBody()),
+                ConditionalBuilder(
+                  condition: ProviderMenuCubit.get(context).chatModel!=null,
+                    fallback: (context)=>SizedBox(),
+                    builder: (context)=> PChatBottom(ProviderMenuCubit.get(context).chatModel!.data!.id!)
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

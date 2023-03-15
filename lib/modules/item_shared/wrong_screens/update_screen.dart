@@ -1,12 +1,18 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
 import '../../../shared/images/images.dart';
 import '../default_button.dart';
 
 class UpdateScreen extends StatelessWidget {
-  const UpdateScreen({Key? key}) : super(key: key);
-
+  UpdateScreen({
+    required this.releaseNote,
+    required this.url,
+  });
+  String url;
+  String releaseNote;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,18 +29,20 @@ class UpdateScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    'New Updates Are Available',
+                    tr('update_title'),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.w600,fontSize: 21),
                   ),
                 ),
                 Text(
-                  'We Have New Updates For Our App',
+                  releaseNote,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),
                 ),
                 const SizedBox(height: 20,),
-                DefaultButton(text: 'Update Now', onTap: (){})
+                DefaultButton(text: tr('update_now'), onTap: (){
+                  openUrl(url);
+                })
               ],
             ),
           ),

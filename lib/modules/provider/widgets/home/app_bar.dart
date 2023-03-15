@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:speed_co/layouts/provider_layout/cubit/provider_cubit.dart';
+import 'package:speed_co/modules/item_shared/image_net.dart';
+import 'package:speed_co/modules/provider/menu_screens/cubit/provider_menu_cubit.dart';
 
 import '../../../../shared/components/components.dart';
 import '../../../../shared/images/images.dart';
 import '../../../user/menu_screens/notification_screen.dart';
+import '../../menu_screens/chat/pchat_history_screen.dart';
 import '../../menu_screens/notification_screen.dart';
 
 class PHomeAppBar extends StatelessWidget {
@@ -11,6 +15,7 @@ class PHomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = ProviderCubit.get(context);
     return Column(
       children: [
         AppBar(
@@ -24,6 +29,12 @@ class PHomeAppBar extends StatelessWidget {
             ),
           ),
           actions: [
+            InkWell(
+                onTap: (){
+                  ProviderMenuCubit.get(context).chatHistory();
+                  navigateTo(context, PChatHistoryScreen());
+                },
+                child: Image.asset(Images.chat,width: 20)),
             Padding(
               padding:const EdgeInsets.symmetric(horizontal: 30),
               child: InkWell(
@@ -42,13 +53,13 @@ class PHomeAppBar extends StatelessWidget {
                   children: [
                     Text(
                       tr('hello'),
-                      style: TextStyle(color: Colors.white,fontSize: 39),
+                      style: TextStyle(color: Colors.white,fontSize: 22),
                     ),
                     Text(
-                      'Ahmed',
+                      cubit.providerModel?.data?.name??'',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.white,fontSize: 39,fontWeight: FontWeight.w600,height: .7),
+                      style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w600,height: .7),
                     ),
                   ],
                 ),
@@ -57,7 +68,7 @@ class PHomeAppBar extends StatelessWidget {
                 height: 90,width: 90,
                 decoration:const BoxDecoration(shape:BoxShape.circle),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: Image.asset(Images.homePhoto,fit: BoxFit.cover,),
+                child: ImageNet(image: ProviderCubit.get(context).providerModel?.data?.personalPhoto??'',),
               ),
             ],
           ),

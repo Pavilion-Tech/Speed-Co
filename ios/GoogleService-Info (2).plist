@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>81927502481-ntaa579oeva4k01rlogvec6gdogk3rif.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.81927502481-ntaa579oeva4k01rlogvec6gdogk3rif</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAksXh_KZEThF6LmRNKq5vSbZg8ygu5SVA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>81927502481</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.speedco</string>
+	<key>PROJECT_ID</key>
+	<string>speedco-4e2be</string>
+	<key>STORAGE_BUCKET</key>
+	<string>speedco-4e2be.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:81927502481:ios:e53942fafd29ddb2b6dd30</string>
+</dict>
+</plist>

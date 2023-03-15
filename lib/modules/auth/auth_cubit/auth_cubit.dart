@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:speed_co/layouts/provider_layout/cubit/provider_cubit.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
 import 'package:speed_co/modules/auth/auth_cubit/auth_states.dart';
 import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_cubit.dart';
@@ -38,6 +40,13 @@ class AuthCubit extends Cubit<AuthStates>{
     }
   }
 
+  void checkInterNet() async {
+    InternetConnectionChecker().onStatusChange.listen((event) {
+      final state = event == InternetConnectionStatus.connected;
+      isConnect = state;
+      emit(JustEmitState());
+    });
+  }
 
   Position? position;
   Future<Position> checkPermissions() async {
@@ -88,13 +97,14 @@ class AuthCubit extends Cubit<AuthStates>{
       url: createUserUrl,
       data: {
         'phone_number':phone,
-        'firebase_token':'',
+        'firebase_token':fcmToken,
         'current_language':myLocale,
         'name':name,
         'current_latitude':lat,
         'current_longitude':lng,
       }
     ).then((value) {
+      print(value.data);
       if(value.data['status'] == true){
         showToast(msg: value.data['message']);
         emit(CreateUserSuccessState());
@@ -117,17 +127,18 @@ class AuthCubit extends Cubit<AuthStates>{
   required String email,
   required String lat,
   required String lng,
-}){
+})async{
+    File file = await FlutterNativeImage.compressImage(image!.path,quality:1,);
     FormData formData = FormData.fromMap({
       'phone_number':phone,
       'email':email,
-      'firebase_token':'',
+      'firebase_token':fcmToken,
       'current_language':myLocale,
       'name':name,
       'current_latitude':lat,
       'current_longitude':lng,
-      'certificate_file':MultipartFile.fromFileSync(image!.path,
-          filename: image!.path.split('/').last),
+      'certificate_file':MultipartFile.fromFileSync(file.path,
+          filename: file.path.split('/').last),
     });
     emit(CreateProviderLoadingState());
     DioHelper.postData2(
@@ -138,6 +149,7 @@ class AuthCubit extends Cubit<AuthStates>{
         showToast(msg: value.data['message']);
         emit(CreateProviderSuccessState());
       }else{
+        print(value.data);
         if(value.data['data']!=null){
           showToast(msg: value.data['data'].toString());
         }else{
@@ -146,6 +158,7 @@ class AuthCubit extends Cubit<AuthStates>{
         emit(CreateProviderWrongState());
       }        
     }).catchError((e){
+      print(e.toString());
       emit(CreateProviderErrorState());
     });
   }
@@ -153,9 +166,7 @@ class AuthCubit extends Cubit<AuthStates>{
   void login(){
     emit(LoginLoadingState());
     DioHelper.postData(
-        url: pLoginUrl,
-        //pLoginUrl,
-        //loginUrl,
+        url: loginUrl,
         data:{'phone_number':phoneC.text.trim()}
     ).then((value) {
       print(value.data);
@@ -188,11 +199,18 @@ class AuthCubit extends Cubit<AuthStates>{
             var cubit =MenuCubit.get(context);
             cubit.getOrders();
             cubit.getUser();
+            UserCubit.get(context).getDate();
+            UserCubit.get(context).changeIndex(0);
           }
           emit(VerifyUserSuccessState());
         }else{
           pToken = value.data['data']['token'];
+          CacheHelper.saveData(key: 'userId', value: userId);
           CacheHelper.saveData(key: 'pToken', value: pToken);
+          if(ProviderCubit.get(context).providerModel!=null){
+            ProviderCubit.get(context).getProvider();
+            ProviderCubit.get(context).getRequests();
+          }
           emit(VerifyProviderSuccessState());
         }
       }else if(value.data['message']!=null){

@@ -12,21 +12,23 @@ class GridProduct extends StatelessWidget {
 
   bool isScroll;
   List<ServiceData> data;
+  late double currentAspect;
 
   @override
   Widget build(BuildContext context) {
+    currentAspect = size!.height >800 ?1.5:1.3;
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: GridView.builder(
         physics: isScroll ? const NeverScrollableScrollPhysics() : null,
         shrinkWrap: true,
         padding: EdgeInsetsDirectional.only(bottom: 100),
-        itemBuilder: (c, i) => ProductItem(data![i]),
+        itemBuilder: (c, i) => ProductItem(data[i]),
         itemCount: data!.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 25, mainAxisSpacing: 10,
-          childAspectRatio: size!.width / (size!.height / 1.5),
+          childAspectRatio: size!.width / (size!.height / currentAspect),
         ),
       ),
     );
@@ -44,7 +46,7 @@ class ProductItem extends StatelessWidget {
       onTap: () {
         token!=null
             ? navigateTo(context, PlaceOrderScreen(data.id??''))
-            : navigateTo(context, LoginScreen());
+            : navigateTo(context, LoginScreen(haveArrow: true,));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -62,7 +64,7 @@ class ProductItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ImageNet(image: data.image??'', height: 142, width: 125,),
+            ImageNet(image: data.image??'', height: 142, width: 125,havePlaceholder: false),
             const SizedBox(height: 20,),
             Text(
               data.title??'',

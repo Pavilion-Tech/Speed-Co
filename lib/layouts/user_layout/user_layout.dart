@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_states.dart';
 import 'package:speed_co/modules/auth/login_screen.dart';
+import 'package:speed_co/modules/item_shared/wrong_screens/maintenance_screen.dart';
 import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_cubit.dart';
 import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_states.dart';
 import 'package:speed_co/modules/user/menu_screens/order/order_history_screen.dart';
@@ -26,11 +27,20 @@ class UserLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UserCubit, UserStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(isConnect!=null)checkNet(context);
+      },
       builder: (context, state) {
         var cubit = UserCubit.get(context);
         return BlocConsumer<MenuCubit, MenuStates>(
-  listener: (context, state) {},
+  listener: (context, state) {
+    if(isConnect!=null)checkNet(context);
+    if(MenuCubit.get(context).settingsModel!=null){
+      if(MenuCubit.get(context).settingsModel!.data!.isProjectInFactoryMode==2){
+        navigateAndFinish(context, MaintenanceScreen());
+      }
+    }
+  },
   builder: (context, state) {
     return Scaffold(
           extendBodyBehindAppBar: true,
@@ -51,7 +61,12 @@ class UserLayout extends StatelessWidget {
                   ));
                 }
               },
-              child:cubit.addressController.text.isEmpty? Row(
+              child:cubit.addressController.text.isEmpty?
+              MenuCubit.get(context).addressController.text.isNotEmpty
+                  ?Text(
+                MenuCubit.get(context).addressController.text,
+                style: TextStyle(color: Colors.white,fontSize: 11),
+              ):Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -77,9 +92,12 @@ class UserLayout extends StatelessWidget {
             actions: [
               InkWell(
                   onTap: () {
-                    token!=null
-                        ? navigateTo(context, ChatHistoryScreen())
-                        : navigateTo(context, LoginScreen());
+                    if(token!=null){
+                      MenuCubit.get(context).chatHistory();
+                      navigateTo(context, ChatHistoryScreen());
+                    }else{
+                      navigateTo(context, LoginScreen(haveArrow: true,));
+                    }
                   },
                   child: Image.asset(Images.chat, width: 24, height: 24,)),
               Padding(
@@ -88,7 +106,7 @@ class UserLayout extends StatelessWidget {
                     onTap: () {
                       token!=null
                           ? navigateTo(context, NotificationScreen())
-                          : navigateTo(context, LoginScreen());
+                          : navigateTo(context, LoginScreen(haveArrow: true,));
                       },
                     child: Image.asset(
                       Images.notification, width: 24, height: 24,)),
@@ -99,23 +117,26 @@ class UserLayout extends StatelessWidget {
           body:cubit.currentIndex==0? HomeScreen():token!=null?OrderHistoryScreen(haveAppbar: false):LoginScreen(),
           bottomNavigationBar: SafeArea(
             child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
-                    onTap: (){
-                      cubit.changeIndex(0);
-                    },
-                      child: Icon(Icons.home_filled, color: defaultColor, size: 24,)),
-                  SizedBox(width: size!.width * .1,),
-                  InkWell(
-                      onTap: () {
-                        cubit.changeIndex(1);
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical:15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        cubit.changeIndex(0);
                       },
-                      child: Image.asset(Images.menu, color: defaultColor,
-                        width: 20,
-                        height: 20,)),
-                ],
+                        child: Icon(Icons.home_filled, color: defaultColor, size: 24,)),
+                    SizedBox(width: size!.width * .1,),
+                    InkWell(
+                        onTap: () {
+                          cubit.changeIndex(1);
+                        },
+                        child: Image.asset(Images.menu, color: defaultColor,
+                          width: 20,
+                          height: 20,)),
+                  ],
+                ),
               ),
             ),
           ),

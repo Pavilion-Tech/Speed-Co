@@ -43,9 +43,7 @@ class OurApp extends StatelessWidget {
             image: Images.email,
             title: tr('contact_us'),
             onTap:  (){
-              token!=null
-                  ? navigateTo(context, ContactUsScreen())
-                  : navigateTo(context, LoginScreen());
+              navigateTo(context, ContactUsScreen());
             }
         ),
         Padding(
@@ -81,7 +79,7 @@ class OurApp extends StatelessWidget {
                   onTap: (){
                     token!=null
                         ? MenuCubit.get(context).logout(context: context)
-                        : navigateTo(context,LoginScreen());
+                        : navigateTo(context,LoginScreen(haveArrow: true,));
                   }
               ),
             ),

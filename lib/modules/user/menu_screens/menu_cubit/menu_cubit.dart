@@ -1,13 +1,21 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:speed_co/models/user/single_order_model.dart';
 import 'package:speed_co/shared/network/local/cache_helper.dart';
 import 'package:speed_co/splash_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../models/chat_history_model.dart';
+import '../../../../models/chat_model.dart';
 import '../../../../models/directions_model.dart';
 import '../../../../models/notification_model.dart';
 import '../../../../models/settings_model.dart';
@@ -29,6 +37,7 @@ class MenuCubit extends Cubit<MenuStates> {
   XFile? chatImage;
   XFile? profileImage;
   TextEditingController controller = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   Position? position;
   Directions? directions;
   Marker? origin;
@@ -38,8 +47,12 @@ class MenuCubit extends Cubit<MenuStates> {
   SettingsModel? settingsModel;
   StaticPageModel? staticPageModel;
   NotificationModel? notificationModel;
+  SingleOrderModel? singleOrderModel;
+  ChatHistoryModel? chatHistoryModel;
   ScrollController notificationScrollController = ScrollController();
   ScrollController orderScrollController = ScrollController();
+  ChatModel? chatModel;
+
 
   Future<XFile?> pick(ImageSource source) async {
     try {
@@ -52,6 +65,13 @@ class MenuCubit extends Cubit<MenuStates> {
 
   void justEmit() {
     emit(JustEmitState());
+  }
+  void checkInterNet() async {
+    InternetConnectionChecker().onStatusChange.listen((event) {
+      final state = event == InternetConnectionStatus.connected;
+      isConnect = state;
+      emit(JustEmitState());
+    });
   }
 
   Future<Position> checkPermissions() async {
@@ -104,6 +124,7 @@ class MenuCubit extends Cubit<MenuStates> {
     }
   }
 
+
   void getDirections({
     required LatLng origin,
     required LatLng destination,
@@ -111,7 +132,7 @@ class MenuCubit extends Cubit<MenuStates> {
     await DirectionsRepository()
         .getDirections(origin: origin, destination: destination)
         .then((value) {
-      directions = value;
+      this.directions = value;
       this.origin = Marker(
           position: origin,
           markerId: MarkerId('origin'),
@@ -124,7 +145,7 @@ class MenuCubit extends Cubit<MenuStates> {
       emit(GetCurrentLocationState());
     }).catchError((e) {
       print(e.toString());
-      showToast(msg: e.toString(), toastState: false);
+      showToast(msg: tr('directions_wrong'), toastState: false);
     });
   }
 
@@ -139,15 +160,25 @@ class MenuCubit extends Cubit<MenuStates> {
 
   void getUser() {
     if (token != null)
-      DioHelper.getData(url: userUrl, token: 'Bearer $token').then((value) {
+      DioHelper.getData(url: userUrl, token: 'Bearer $token',lang: myLocale).then((value) {
         if (value.data['data'] != null) {
           userModel = UserModel.fromJson(value.data);
           emit(GetUserSuccessState());
+          if(userModel!.data!.currentLatitude!.isNotEmpty){
+            getAddress(
+                controller: addressController,
+                latLng: LatLng(
+                    double.parse(userModel!.data!.currentLatitude!),
+                    double.parse(userModel!.data!.currentLongitude!)
+                )
+            );
+          }
         } else {
           showToast(msg: value.data['message']);
           emit(GetUserWrongState());
         }
       }).catchError((e) {
+        showToast(msg: tr('wrong'));
         emit(GetUserErrorState());
       });
   }
@@ -167,13 +198,17 @@ class MenuCubit extends Cubit<MenuStates> {
       'firebase_token':fcmToken,
       'current_language':myLocale,
     });
-    if (profileImage != null)
+    if (profileImage != null){
+      File file = await FlutterNativeImage.compressImage(profileImage!.path,quality:1,);
       formData.files.addAll({
-        MapEntry('personal_photo', await MultipartFile.fromFileSync(profileImage!.path,
-                filename: profileImage!.path.split('/').last))});
+        MapEntry('personal_photo',MultipartFile.fromFileSync(file.path,
+            filename: file.path.split('/').last))});
+    }
+
     DioHelper.putData(
             url: updateUserUrl,
         token: 'Bearer $token',
+        lang: myLocale,
         formData: formData
     ).then((value) {
       showToast(msg:value.data['message']);
@@ -192,9 +227,9 @@ class MenuCubit extends Cubit<MenuStates> {
     emit(GetOrderLoadingState());
     if(token!=null)
     DioHelper.getData(
-          url: '$orderUrl$page',
+          url: '$pOrderUrl$page',
+        lang: myLocale,
           token: 'Bearer $token').then((value) {
-            print(value.data);
         if (value.data['data'] != null) {
           if(page == 1) {
             ordersModel = OrdersModel.fromJson(value.data);
@@ -229,7 +264,7 @@ class MenuCubit extends Cubit<MenuStates> {
     });
   }
   void getSettings() {
-      DioHelper.getData(url: 'settings').then((value) {
+      DioHelper.getData(url: 'settings',lang: myLocale).then((value) {
         if (value.data['data'] != null) {
           settingsModel = SettingsModel.fromJson(value.data);
           emit(GetUserSuccessState());
@@ -242,7 +277,7 @@ class MenuCubit extends Cubit<MenuStates> {
       });
   }
   void getStaticPages() {
-      DioHelper.getData(url: 'static-pages/all').then((value) {
+      DioHelper.getData(url: 'static-pages/all',lang: myLocale).then((value) {
         if (value.data['data'] != null) {
           staticPageModel = StaticPageModel.fromJson(value.data);
           emit(GetUserSuccessState());
@@ -261,7 +296,7 @@ class MenuCubit extends Cubit<MenuStates> {
     emit(ContactLoadingState());
     DioHelper.postData(
         url: contactUrl,
-        token: 'Bearer $token',
+        lang: myLocale,
         data: {
           'subject':subject,
           'message':message,
@@ -282,8 +317,8 @@ class MenuCubit extends Cubit<MenuStates> {
     if(token!=null)
       DioHelper.getData(
           url: '$notificationUrl$page',
+          lang: myLocale,
           token: 'Bearer $token').then((value) {
-        print(value.data);
         if (value.data['data'] != null) {
           if(page == 1) {
             notificationModel = NotificationModel.fromJson(value.data);
@@ -322,6 +357,7 @@ class MenuCubit extends Cubit<MenuStates> {
     DioHelper.postData(
         url: logoutUrl,
       token: 'Bearer $token',
+      lang: myLocale,
       data: {'destroy':destroy},
     );
     userModel = null;
@@ -330,4 +366,114 @@ class MenuCubit extends Cubit<MenuStates> {
     CacheHelper.removeData('token');
     navigateAndFinish(context, SplashScreen());
   }
+  
+  void getSingleOrder(String id){
+    print('$singeOrderUrl$id');
+    print(token);
+    DioHelper.getData(
+        url: '$singeOrderUrl$id',
+      token: 'Bearer $token',
+        lang: myLocale
+    ).then((value) {
+      print(value.data);
+      if(value.data['data']!=null){
+        singleOrderModel = SingleOrderModel.fromJson(value.data);
+        emit(GetOrderSuccessState());
+        getDirections(
+            origin: LatLng(position!.latitude, position!.longitude),
+            destination: LatLng(
+                double.parse(singleOrderModel!.data!.providerLatitude!),
+              double.parse(singleOrderModel!.data!.providerLongitude!),
+            )
+        );
+      }else{
+        showToast(msg: tr('wrong'));
+        emit(GetOrderWrongState());
+      }
+    }).catchError((e){
+      emit(GetOrderErrorState());
+    });
+  }
+
+  void chatHistory(){
+    emit(ChatHistoryLoadingState());
+    DioHelper.getData(
+        url:chatHistoryUrl,
+      token: 'Bearer $token',
+        lang: myLocale
+    ).then((value) {
+      if(value.data['data']!=null){
+        chatHistoryModel = ChatHistoryModel.fromJson(value.data);
+        emit(ChatHistorySuccessState());
+      }else{
+        showToast(msg: tr('wrong'));
+        emit(ChatHistoryWrongState());
+      }
+    }).catchError((e){
+      showToast(msg: tr('wrong'));
+      emit(ChatHistoryErrorState());
+    });
+  }
+
+  void chat(String id){
+    DioHelper.getData(
+        url:'$chatUrl$id',
+      token: 'Bearer $token',
+        lang: myLocale
+    ).then((value) {
+      print(value.data);
+      if(value.data['data']!=null){
+        chatModel = ChatModel.fromJson(value.data);
+        emit(ChatHistorySuccessState());
+      }else if(value.data['message']!=null){
+        showToast(msg: value.data['message']);
+        emit(ChatHistoryWrongState());
+      }
+    }).catchError((e){
+      showToast(msg: tr('wrong'));
+      emit(ChatHistoryErrorState());
+    });
+  }
+
+  void sendMessage({
+  required String id,
+  String? message,
+  required int type
+}){
+    emit(SendMessageLoadingState());
+    FormData formData = FormData.fromMap({
+      'order_id':id,
+      'message_type':type
+    });
+    if(chatImage!=null){
+      formData.files.addAll({
+        MapEntry('uploaded_message_file', MultipartFile.fromFileSync(
+          chatImage!.path,filename: chatImage!.path.split('/').last
+        ))
+      });
+    }else{
+      formData.fields.addAll({
+        MapEntry('message',message!)
+      });
+    }
+    DioHelper.postData2(
+        url: sendMessageUrl,
+      formData:formData,
+      token: 'Bearer $token',
+        lang: myLocale
+    ).then((value) {
+      if(value.data['status'] == true){
+        if(controller.text.isNotEmpty)controller.text = '';
+        chat(id);
+        emit(SendMessageSuccessState());
+      }else{
+        showToast(msg: tr('wrong'));
+        emit(SendMessageWrongState());
+      }
+    }).catchError((e){
+      showToast(msg: tr('wrong'));
+      emit(SendMessageErrorState());
+    });
+  }
 }
+

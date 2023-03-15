@@ -29,3 +29,15 @@ class NotificationLoadingState extends MenuStates{}
 class NotificationSuccessState extends MenuStates{}
 class NotificationWrongState extends MenuStates{}
 class NotificationErrorState extends MenuStates{}
+
+class ChatHistoryLoadingState extends MenuStates{}
+class ChatHistorySuccessState extends MenuStates{}
+class ChatHistoryWrongState extends MenuStates{}
+class ChatHistoryErrorState extends MenuStates{}
+
+class SendMessageLoadingState extends MenuStates{}
+class SendMessageSuccessState extends MenuStates{}
+class SendMessageWrongState extends MenuStates{}
+class SendMessageErrorState extends MenuStates{}
+
+

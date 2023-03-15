@@ -1,4 +1,4 @@
-package com.example.speed_co
+package com.speed_co
 
 import io.flutter.embedding.android.FlutterActivity
 

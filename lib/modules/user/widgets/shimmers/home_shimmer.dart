@@ -46,21 +46,12 @@ class HomeShimmer extends StatelessWidget {
                   return Shimmer.fromColors(
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.white,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          height: 90,width: 90,
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              shape: BoxShape.circle,
-                          ),
-                        ),
-                        Text(
-                          'Title',
-                          textAlign: TextAlign.center,
-                        )
-                      ],
+                    child: Container(
+                      height: 90,width: 90,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   );
                 },

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "81927502481",
+    "project_id": "speedco-4e2be",
+    "storage_bucket": "speedco-4e2be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81927502481:android:ebfe4fd8ec0dbc84b6dd30",
+        "android_client_info": {
+          "package_name": "com.speed_co"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81927502481-pqblulbs586pf4j9sp0kl82tnnmi8kr1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJH96p8tZQL_rCpqfsPUvzOZkFxs0FJsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81927502481-pqblulbs586pf4j9sp0kl82tnnmi8kr1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "81927502481-ntaa579oeva4k01rlogvec6gdogk3rif.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.speedco"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

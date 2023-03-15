@@ -1,5 +1,8 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
+import 'package:speed_co/modules/item_shared/no_items/no_requests.dart';
 import 'package:speed_co/shared/styles/colors.dart';
 
 import '../widgets/item_shared/grid_products.dart';
@@ -15,11 +18,15 @@ class PlaceOrderSheet extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: Text(
-            'Select Service',
+            tr('select_service'),
             style: TextStyle(color: defaultColorTwo,fontSize: 12,fontWeight: FontWeight.w500),
           ),
         ),
-        Expanded(child: GridProduct(isScroll: false,data: UserCubit.get(context).serviceModel!.data!,))
+        Expanded(child: ConditionalBuilder(
+          condition: UserCubit.get(context).serviceModel!.data!.isNotEmpty,
+          fallback: (context)=>NoRequests(isHome: true),
+          builder: (context)=>GridProduct(isScroll: false,data: UserCubit.get(context).serviceModel!.data!,),
+        ))
       ],
     );
   }

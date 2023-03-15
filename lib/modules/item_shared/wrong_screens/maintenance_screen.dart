@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/components/constants.dart';
@@ -21,13 +22,13 @@ class MaintenanceScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30.0,horizontal: 20),
                   child: Text(
-                    'App Is Closed For Maintenance',
+                    tr('maintenance_title'),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.w600,fontSize: 21),
                   ),
                 ),
                 Text(
-                  'We Are Making Some Fixes In the App For Improving the Quality Of Our Services',
+                  tr('maintenance_desc'),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),
                 ),

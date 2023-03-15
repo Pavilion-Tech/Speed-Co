@@ -1,10 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:speed_co/modules/provider/menu_screens/cubit/provider_menu_cubit.dart';
 
 import '../../../../../shared/components/components.dart';
 import '../../../../../shared/images/images.dart';
 import '../../../../../shared/styles/colors.dart';
 import '../../../../../splash_screen.dart';
+import '../../../../layouts/provider_layout/cubit/provider_cubit.dart';
 import '../../../user/menu_screens/chat/chat_screen.dart';
 import '../../../user/menu_screens/edit_profile/edit_profile_screen.dart';
 import '../../menu_screens/edit_profile_screen.dart';
@@ -17,13 +19,11 @@ class AccountSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          onTap: () => navigateAndFinish(context, SplashScreen()),
-          child: Text(
-            tr('sign_in_now'),
-            style:const TextStyle(
-                color: Colors.black, fontSize: 32, fontWeight: FontWeight.w700),
-          ),
+        if(ProviderCubit.get(context).providerModel!=null)
+        Text(
+          ProviderCubit.get(context).providerModel!.data!.name??'',
+          style:const TextStyle(
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
         ),
         Column(
           children: [
@@ -33,16 +33,10 @@ class AccountSettings extends StatelessWidget {
                   image: Images.person,
                   title: 'profile_info',
                   onTap: () {
-                    navigateTo(context, PEditProfileScreen());
+                    if(ProviderCubit.get(context).providerModel!=null)
+                      navigateTo(context, PEditProfileScreen());
                   }),
             ),
-            itemBuilder(
-                image: Images.support,
-                title: 'technical_support',
-                onTap: () {
-                  navigateTo(context, ChatScreen());
-                }),
-            const SizedBox(height: 20,)
           ],
         ),
       ],

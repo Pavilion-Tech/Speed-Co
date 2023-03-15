@@ -61,12 +61,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               Container(
                 height: 90,width: 90,
                 decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade100.withOpacity(.5),
-                      blurRadius: 5,
-                    )
-                  ],
                   color: defaultColor.withOpacity(.2),
                   shape: BoxShape.circle,
                   border:currentIndex == index?Border.all(color: defaultColor):null

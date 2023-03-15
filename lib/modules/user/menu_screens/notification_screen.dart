@@ -6,6 +6,7 @@ import 'package:speed_co/modules/item_shared/no_items/no_notifications.dart';
 import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_cubit.dart';
 import 'package:speed_co/modules/user/menu_screens/menu_cubit/menu_states.dart';
 import 'package:speed_co/shared/components/components.dart';
+import 'package:speed_co/shared/components/constants.dart';
 
 import '../../../models/notification_model.dart';
 import '../../../shared/images/images.dart';
@@ -92,7 +93,8 @@ class NotificationScreen extends StatelessWidget {
           ),
         ),
         Positioned(
-            left: 5,
+            left: myLocale =='en'?5:null,
+            right: myLocale =='ar'?5:null,
             child: Image.asset(Images.homePhoto2,height: 74,width: 65,fit: BoxFit.cover,))
       ],
     );

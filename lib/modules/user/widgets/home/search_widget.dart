@@ -9,10 +9,12 @@ class SearchWidget extends StatelessWidget {
 
   SearchWidget({
     this.readOnly = false,
-    this.onChanged
+    this.onChanged,
+    this.autoPlay = false
 });
 
   bool readOnly;
+  bool autoPlay;
   ValueChanged<String>? onChanged;
 
   @override
@@ -29,6 +31,7 @@ class SearchWidget extends StatelessWidget {
         TextFormField(
           readOnly: readOnly,
           onChanged: onChanged,
+          autofocus: autoPlay,
           onTap: readOnly?()=>navigateTo(context, SearchScreen()):null,
           decoration: InputDecoration(
             prefixIcon: Padding(

@@ -6,7 +6,7 @@ class OrdersModel {
   OrdersModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ?  Data.fromJson(json['data']) : null;
   }
 
 }
@@ -16,7 +16,6 @@ class Data {
   int? pages;
   int? count;
   List<OrderData>? data;
-
 
   Data.fromJson(Map<String, dynamic> json) {
     currentPage = json['currentPage'];
@@ -33,33 +32,51 @@ class Data {
 
 class OrderData {
   String? id;
+  String? serviceId;
+  String? serviceTitle;
+  String? serviceImage;
   String? userName;
+  String? userPhone;
+  String? userLatitude;
+  String? userLongitude;
+  String? userAddress;
+  String? providerName;
+  String? providerId;
+  String? providerLatitude;
+  String? providerLongitude;
+  String? providerPhoneNumber;
+  String? providerImage;
   int? status;
   int? itemNumber;
   String? date;
   String? time;
-  String? serviceImage;
-  String? description;
   List<String>? images;
   String? createdAt;
-  String? providerName;
-  String? providerId;
+  String? description;
 
 
   OrderData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    serviceId = json['service_id'];
+    serviceTitle = json['service_title'];
+    serviceImage = json['service_image'];
     userName = json['user_name'];
+    userPhone = json['user_phone'];
+    userLatitude = json['user_latitude'];
+    userLongitude = json['user_longitude'];
+    userAddress = json['user_address'];
+    providerName = json['provider_name'];
+    providerId = json['provider_id'];
+    providerLatitude = json['provider_latitude'];
+    providerLongitude = json['provider_longitude'];
+    providerPhoneNumber = json['provider_phone_number'];
+    providerImage = json['provider_image'];
     status = json['status'];
     itemNumber = json['item_number'];
     date = json['date'];
     time = json['time'];
-    serviceImage = json['service_image'];
-    description = json['description'];
     images = json['images'].cast<String>();
     createdAt = json['created_at'];
-    providerName = json['provider_name'];
-    providerId = json['provider_id'];
-
+    description = json['description'];
   }
-
 }

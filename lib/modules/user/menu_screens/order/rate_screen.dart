@@ -22,7 +22,9 @@ class _RateScreenState extends State<RateScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UserCubit, UserStates>(
-  listener: (context, state) {},
+  listener: (context, state) {
+    if(state is RateSuccessState)Navigator.pop(context);
+  },
   builder: (context, state) {
     return Scaffold(
       body: Stack(

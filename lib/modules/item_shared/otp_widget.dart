@@ -4,11 +4,12 @@ import 'package:speed_co/shared/styles/colors.dart';
 import '../../../shared/components/constants.dart';
 
 class OTPWidget extends StatelessWidget {
-  OTPWidget(this.controller,{this.onFinished});
+  OTPWidget(this.controller,{this.onFinished,this.autoFocus=false});
 
 
   VoidCallback? onFinished;
   TextEditingController controller;
+  bool autoFocus;
 
 
   @override
@@ -24,6 +25,7 @@ class OTPWidget extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
+        autofocus: autoFocus,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,
