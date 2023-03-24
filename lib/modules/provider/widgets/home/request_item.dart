@@ -124,14 +124,17 @@ class RequestItem extends StatelessWidget {
           ),
           const SizedBox(height: 20,),
           if(data.status==1)
-          DefaultButton(text: tr('carry_out'), onTap: (){
+          DefaultButton(text: tr('carry_out'), onTap: ()async{
             var cubit = ProviderCubit.get(context);
-            print(data.status);
-            ProviderCubit.get(context).getDirection(
-                origin: LatLng(cubit.position!.latitude,cubit.position!.longitude),
-                destination: LatLng(double.parse(data.userLatitude??''),double.parse(data.userLongitude??''))
-            );
-            navigateTo(context, PTrackOrderScreen());
+            await cubit.getCurrentLocation();
+             if(cubit.position!=null){
+               ProviderCubit.get(context).getDirection(
+                   origin: LatLng(cubit.position!.latitude,cubit.position!.longitude),
+                   destination: LatLng(double.parse(data.userLatitude??''),double.parse(data.userLongitude??''))
+               );
+             }
+              navigateTo(context, PTrackOrderScreen(data.userLatitude??'',data.userLongitude??''));
+
           })
         ],
       ),

@@ -60,15 +60,7 @@ class ContactUsScreen extends StatelessWidget {
                             image: images[1],
                             onTap:(){
                               String phone = cubit.settingsModel?.data?.projectWhatsAppNumber ?? '';
-                              String url() {
-                                if (Platform.isAndroid) {
-                                  return "https://wa.me/$phone/?text=hello"; // new line
-                                } else {
-                                  return "https://api.whatsapp.com/send?phone=$phone"; // new line
-                                }
-                              }
-
-                              String waUrl = url();
+                              String waUrl = 'https://wa.me/$phone';
                               openUrl(waUrl);
                             }
                         ),

@@ -60,11 +60,7 @@ class PContactUsScreen extends StatelessWidget {
                           image: images[1],
                           onTap:(){
                             String phone = cubit.settingsModel?.data?.projectWhatsAppNumber ?? '';
-                            String url() {
-                              return "https://wa.me/$phone";
-                            }
-
-                            String waUrl = url();
+                            String waUrl = 'https://wa.me/$phone';
                             openUrl(waUrl);
                           }
                       ),

@@ -10,6 +10,10 @@ import '../../../shared/styles/colors.dart';
 
 class PTrackOrderScreen extends StatefulWidget {
 
+  PTrackOrderScreen(this.lat,this.lng);
+  String lat;
+  String lng;
+
   @override
   State<PTrackOrderScreen> createState() => _PTrackOrderScreenState();
 }
@@ -30,7 +34,9 @@ class _PTrackOrderScreenState extends State<PTrackOrderScreen> {
         children: [
           GoogleMap(
             initialCameraPosition: CameraPosition(
-                target: LatLng(25.019083,55.121239),
+                target:cubit.position!=null
+                    ?LatLng(cubit.position!.latitude,cubit.position!.longitude)
+                    : LatLng(25.019083,55.121239),
                 zoom: 14
             ),
             polylines: {
@@ -66,27 +72,54 @@ class _PTrackOrderScreenState extends State<PTrackOrderScreen> {
                   mainAxisAlignment:  MainAxisAlignment.center,
                   children: [
                     Text(
-                      '3.2 KM',
+                      '${cubit.directions?.totalDistance??''}',
                       style: TextStyle(color: defaultColorTwo,fontSize: 32,fontWeight: FontWeight.w500),
                     ),
-                    InkWell(
-                        onTap: (){
-                          if(cubit.origin!=null) cubit.openMap();
-                        },
-                        child: Icon(Icons.location_on_outlined,color: defaultColor,size: 40,)),
+                    // InkWell(
+                    //     onTap: (){
+                    //       if(cubit.origin!=null) cubit.openMap();
+                    //     },
+                    //     child: Icon(Icons.location_on_outlined,color: defaultColor,size: 40,)),
                   ],
                 ),
                 Text(
-                  '10 Min',
+                  '${cubit.directions?.totalDuration??''}',
                   style: TextStyle(color: defaultColorTwo,fontSize: 18,height: 1),
                 ),
                 const SizedBox(height: 20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    itemBuilder(Images.car,0),
-                    itemBuilder(Images.walk,1),
-                    itemBuilder(Images.bus,2),
+                    itemBuilder(Images.car,0,(){
+                      setState(() {
+                        currentIndex = 0;
+                      });
+                      cubit.getDirection(
+                        mode: 'driving',
+                          origin: LatLng(cubit.position!.latitude,cubit.position!.longitude),
+                          destination: LatLng(double.parse(widget.lat),double.parse(widget.lng))
+                      );
+                    }),
+                    itemBuilder(Images.walk,1,(){
+                      setState(() {
+                        currentIndex = 1;
+                      });
+                      cubit.getDirection(
+                        mode: 'walking',
+                          origin: LatLng(cubit.position!.latitude,cubit.position!.longitude),
+                          destination: LatLng(double.parse(widget.lat),double.parse(widget.lng)
+                      ));
+                    }),
+                    itemBuilder(Images.bus,2,(){
+                      setState(() {
+                        currentIndex = 2;
+                      });
+                      cubit.getDirection(
+                        mode: 'bicycling',
+                          origin: LatLng(cubit.position!.latitude,cubit.position!.longitude),
+                          destination: LatLng(double.parse(widget.lat),double.parse(widget.lng)                          )
+                      );
+                    }),
                   ],
                 ),
               ],
@@ -99,13 +132,9 @@ class _PTrackOrderScreenState extends State<PTrackOrderScreen> {
 );
   }
 
-  Widget itemBuilder(String image, int index){
+  Widget itemBuilder(String image, int index,VoidCallback onTap){
     return InkWell(
-      onTap: (){
-        setState(() {
-          currentIndex = index;
-        });
-      },
+      onTap:onTap,
         child: Image.asset(image,width: 70,color: currentIndex == index?defaultColor:null));
   }
 }

@@ -241,6 +241,7 @@ class UserCubit extends Cubit<UserStates>{
       print(value.data);
       showToast(msg: value.data['message']);
       if(value.data['data']!=null){
+        images.clear();
         MenuCubit.get(context).getOrders();
         emit(PlaceOrderSuccessState());
       }else{
@@ -298,10 +299,8 @@ class UserCubit extends Cubit<UserStates>{
   }
 
   void getDate(){
-    if(token!=null)
     DioHelper.getData(
         url: dateUrl,
-      token: 'Bearer $token',
         lang: myLocale
     ).then((value) {
       if(value.data['data']!=null){

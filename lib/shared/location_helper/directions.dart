@@ -12,12 +12,14 @@ class DirectionsRepository{
   Future<Directions?> getDirections ({
     required LatLng origin,
     required LatLng destination,
+    String mode = 'driving'
   })async{
     final response = await _dio!.get(
         _url,
         queryParameters: {
           'origin':'${origin.latitude.toString()},${origin.longitude.toString()}',
           'destination':'${destination.latitude.toString()},${destination.longitude.toString()}',
+          'mode':mode,
           'key':googleAPIKey
         }
     ).catchError((e)=>print(e.toString()));

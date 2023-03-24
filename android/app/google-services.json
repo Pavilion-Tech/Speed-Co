@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:81927502481:android:ebfe4fd8ec0dbc84b6dd30",
+        "mobilesdk_app_id": "1:81927502481:android:1b239d47f0f10e13b6dd30",
         "android_client_info": {
           "package_name": "com.speed_co"
         }
@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "81927502481-ntaa579oeva4k01rlogvec6gdogk3rif.apps.googleusercontent.com",
+              "client_id": "81927502481-hiipui2ni894slqa6l5mn4o86vk3i5df.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.speedco"
+                "bundle_id": "co.speed-co"
               }
             }
           ]

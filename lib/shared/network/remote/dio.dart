@@ -8,7 +8,7 @@ class DioHelper {
   static void init1() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'https://speed-co-api.invoacdmy.com/',
+        baseUrl: 'https://speed-co-api.pavilionapp.tech/',
         receiveTimeout: 3000000,
         connectTimeout: 3000000,
         receiveDataWhenStatusError: true,

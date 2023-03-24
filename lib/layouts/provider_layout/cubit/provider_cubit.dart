@@ -103,10 +103,12 @@ class ProviderCubit extends Cubit<ProviderStates>{
   void getDirection({
     required LatLng origin,
     required LatLng destination,
+    String mode = 'driving'
   })async{
     await  DirectionsRepository()
-        .getDirections(origin: origin, destination: destination)
+        .getDirections(origin: origin, destination: destination,mode: mode)
         .then((value) {
+          print(value!.totalDuration);
       directions = value;
       this.origin = Marker(
           position: origin,

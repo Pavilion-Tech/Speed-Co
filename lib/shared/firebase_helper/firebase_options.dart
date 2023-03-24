@@ -41,12 +41,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
       apiKey: 'AIzaSyAksXh_KZEThF6LmRNKq5vSbZg8ygu5SVA',
-      appId: '1:81927502481:ios:e53942fafd29ddb2b6dd30',
+      appId: '1:81927502481:ios:e1b95dd4d22f008fb6dd30',
       messagingSenderId: '81927502481',
       projectId: 'speedco-4e2be',
       storageBucket: 'speedco-4e2be.appspot.com',
-      iosClientId: '81927502481-ntaa579oeva4k01rlogvec6gdogk3rif.apps.googleusercontent.com',
-      iosBundleId: 'com.speedco',
+      iosClientId: '81927502481-hiipui2ni894slqa6l5mn4o86vk3i5df.apps.googleusercontent.com',
+      iosBundleId: 'co.speed-co',
    //   deepLinkURLScheme: 'https://soldoutapp.page.link/'
   );
 

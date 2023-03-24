@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Speed Co UAE</string>
+	<string>SpeedCo</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -37,19 +37,19 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NCLocationWhenInUsageDescription</key>
-	<string>This app requires access to the location for app functionality</string>
+	<string>This app requires access to the location for Track or choose location to send to provider.</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Speed Go application needs to play audio files that have been uploaded as a custom request</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the photo library for app functionality.</string>
+	<string>This app requires access to Camera for pick profile image or chat image or problem images.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to the location for app functionality.</string>
+	<string>This app requires access to the location for Track or choose location to send to provider.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need to access to the microphone to record audio file</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app requires read and write access to the photo library for app functionality.</string>
+	<string>This app requires access to Camera for pick profile image or chat image or problem images.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library for app functionality.</string>
+	<string>This app requires access to Camera for pick profile image or chat image or problem images.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
