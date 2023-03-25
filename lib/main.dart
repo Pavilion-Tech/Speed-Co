@@ -21,12 +21,15 @@ import 'modules/auth/auth_cubit/auth_cubit.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-  );
-  NotificationHelper();
-  fcmToken = await  FirebaseMessaging.instance.getToken();
-  print(fcmToken);
+  try{
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform
+    );
+    NotificationHelper();
+    fcmToken = await  FirebaseMessaging.instance.getToken();
+  }catch(e){
+    print(e.toString());
+  }
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await CacheHelper.init();
   DioHelper.init1();
