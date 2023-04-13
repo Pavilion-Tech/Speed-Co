@@ -12,7 +12,8 @@ import '../../item_shared/default_form.dart';
 import '../widgets/item_shared/map_address_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({this.haveArrow = false});
+  bool haveArrow ;
   TextEditingController addressController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -23,6 +24,15 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: haveArrow?AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          onPressed: ()=>Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,),
+        ),
+      ):null,
       body: BlocConsumer<AuthCubit, AuthStates>(
         listener: (context, state) {
           if(isConnect!=null)checkNet(context);
@@ -150,7 +160,7 @@ class SignUpScreen extends StatelessWidget {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  navigateAndFinish(context, LoginScreen());
+                                  navigateTo(context, LoginScreen(haveArrow: true,));
                                 },
                                 child: Text(
                                   tr('back'),

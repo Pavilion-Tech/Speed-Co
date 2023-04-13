@@ -38,10 +38,12 @@ class ProviderCubit extends Cubit<ProviderStates>{
   void checkUpdate(context) async{
     final newVersion =await NewVersionPlus().getVersionStatus();
     if(newVersion !=null){
-      if(newVersion.canUpdate)navigateAndFinish(context, UpdateScreen(
-          url:newVersion.appStoreLink,
-          releaseNote:newVersion.releaseNotes??tr('update_desc')
-      ));
+      if(newVersion.canUpdate){
+        navigateAndFinish(context, UpdateScreen(
+            url:newVersion.appStoreLink,
+            releaseNote:newVersion.releaseNotes??tr('update_desc')
+        ));
+      }
     }
   }
   void checkInterNet() async {

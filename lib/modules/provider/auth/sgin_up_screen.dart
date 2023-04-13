@@ -17,9 +17,9 @@ import '../../user/widgets/item_shared/map_address_screen.dart';
 import 'choose_photo_type.dart';
 
 class ProviderSignUpScreen extends StatelessWidget {
-   ProviderSignUpScreen({Key? key}) : super(key: key);
-
-   TextEditingController addressController = TextEditingController();
+  ProviderSignUpScreen({this.haveArrow = false});
+  bool haveArrow ;
+  TextEditingController addressController = TextEditingController();
    TextEditingController nameController = TextEditingController();
    TextEditingController emailController = TextEditingController();
    TextEditingController fileController = TextEditingController();
@@ -40,6 +40,15 @@ class ProviderSignUpScreen extends StatelessWidget {
     var cubit = AuthCubit.get(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      extendBodyBehindAppBar: true,
+      appBar: haveArrow?AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          onPressed: ()=>Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,),
+        ),
+      ):null,
       body: Form(
         key: formKey,
         child: Column(
@@ -223,7 +232,7 @@ class ProviderSignUpScreen extends StatelessWidget {
                         ),
                         TextButton(
                             onPressed: (){
-                              navigateAndFinish(context, LoginScreen());
+                              navigateTo(context, LoginScreen(haveArrow: true,));
                             },
                             child: Text(
                               tr('back'),

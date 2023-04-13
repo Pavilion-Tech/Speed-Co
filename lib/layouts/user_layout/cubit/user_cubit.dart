@@ -37,12 +37,16 @@ class UserCubit extends Cubit<UserStates>{
 
   int currentIndex = 0;
 
+  int currentCategory = 0;
+
+
   AdsModel? adsModel;
 
   CategoriesModel? categoriesModel;
 
   ServiceModel? serviceModel;
   ServiceModel? searchServiceModel;
+  ServiceModel? placeOrderServiceModel;
 
   Position? position;
 
@@ -77,10 +81,12 @@ class UserCubit extends Cubit<UserStates>{
   void checkUpdate(context) async{
     final newVersion =await NewVersionPlus().getVersionStatus();
     if(newVersion !=null){
-      if(newVersion.canUpdate)navigateAndFinish(context, UpdateScreen(
-          url:newVersion.appStoreLink,
-          releaseNote:newVersion.releaseNotes??tr('update_desc')
-      ));
+      if(newVersion.canUpdate){
+        navigateAndFinish(context, UpdateScreen(
+            url:newVersion.appStoreLink,
+            releaseNote:newVersion.releaseNotes??tr('update_desc')
+        ));
+      }
     }
   }
 
@@ -288,6 +294,24 @@ class UserCubit extends Cubit<UserStates>{
     ).then((value) {
       if(value.data['data']!=null){
         searchServiceModel = ServiceModel.fromJson(value.data);
+        emit(SearchSuccessState());
+      }else{
+        showToast(msg: value.data['message']);
+        emit(SearchWrongState());
+      }
+    }).catchError((e){
+      emit(SearchErrorState());
+    });
+  }
+
+  void placeOrderService(){
+    emit(SearchLoadingState());
+    DioHelper.getData(
+        url: searchUrl,
+        lang: myLocale
+    ).then((value) {
+      if(value.data['data']!=null){
+        placeOrderServiceModel = ServiceModel.fromJson(value.data);
         emit(SearchSuccessState());
       }else{
         showToast(msg: value.data['message']);

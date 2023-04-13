@@ -22,6 +22,7 @@ class ProviderLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ProviderCubit.get(context).checkUpdate(context);
     return BlocConsumer<ProviderCubit, ProviderStates>(
       listener: (context, state) {
         if(isConnect!=null)checkNet(context,isUser: false);

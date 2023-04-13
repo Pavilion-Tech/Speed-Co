@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -39,10 +41,16 @@ void main() async{
   pToken = CacheHelper.getData(key: 'pToken');
   pToken = CacheHelper.getData(key: 'pToken');
   String? local  = CacheHelper.getData(key: 'locale');
-  myLocale = local??'en';
+  if(local !=null){
+    myLocale = local;
+  }else{
+    Platform.localeName.contains('ar')
+        ?myLocale = 'ar'
+        :myLocale = 'en';
+  }
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
-  print(token);
+  print(version);
   BlocOverrides.runZoned(
         () {
       runApp(
@@ -67,10 +75,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => UserCubit()..checkInterNet()..checkUpdate(context)..getHomeData()..getDate(),),
+        BlocProvider(create: (context) => UserCubit()..checkInterNet()..getHomeData()..getDate(),),
         BlocProvider(create: (context) => AuthCubit()..checkInterNet(),),
         BlocProvider(create: (context) => MenuCubit()..checkInterNet()..getUser()..getOrders()..getSettings()..getStaticPages(),),
-        BlocProvider(create: (context) => ProviderCubit()..checkInterNet()..checkUpdate(context)..getRequests()..getProvider()),
+        BlocProvider(create: (context) => ProviderCubit()..checkInterNet()..getRequests()..getProvider()),
         BlocProvider(create: (context) => ProviderMenuCubit()..checkInterNet()..getSettings()..getStaticPages()..chatHistory(),),
       ],
       child: MaterialApp(

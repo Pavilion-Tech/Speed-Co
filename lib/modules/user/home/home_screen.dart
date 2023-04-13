@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
                 CupertinoSliverRefreshControl(
                   onRefresh: () {
                     return Future.delayed(Duration.zero,(){
+                      UserCubit.get(context).currentCategory =0;
                       UserCubit.get(context).getHomeData();
                     });
                   },
@@ -64,6 +65,7 @@ class HomeScreen extends StatelessWidget {
               child: DefaultButton(
                   text: tr('place_new'),
                   onTap: (){
+                    cubit.placeOrderService();
                     showModalBottomSheet(
                         context: context,
                         shape: RoundedRectangleBorder(

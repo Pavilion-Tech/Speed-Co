@@ -1,7 +1,10 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
+import 'package:speed_co/layouts/user_layout/cubit/user_states.dart';
 import 'package:speed_co/modules/item_shared/no_items/no_requests.dart';
 import 'package:speed_co/shared/styles/colors.dart';
 
@@ -12,6 +15,10 @@ class PlaceOrderSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<UserCubit, UserStates>(
+  listener: (context, state) {},
+  builder: (context, state) {
+    var cubit = UserCubit.get(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -22,12 +29,21 @@ class PlaceOrderSheet extends StatelessWidget {
             style: TextStyle(color: defaultColorTwo,fontSize: 12,fontWeight: FontWeight.w500),
           ),
         ),
-        Expanded(child: ConditionalBuilder(
-          condition: UserCubit.get(context).serviceModel!.data!.isNotEmpty,
-          fallback: (context)=>NoRequests(isHome: true),
-          builder: (context)=>GridProduct(isScroll: false,data: UserCubit.get(context).serviceModel!.data!,),
-        ))
+        ConditionalBuilder(
+          condition: cubit.placeOrderServiceModel!=null,
+          fallback: (context)=>Padding(
+            padding: const EdgeInsets.symmetric(vertical: 60.0),
+            child: const CupertinoActivityIndicator(),
+          ),
+          builder: (context)=> Expanded(child: ConditionalBuilder(
+            condition: cubit.placeOrderServiceModel!.data!.isNotEmpty,
+            fallback: (context)=>NoRequests(isHome: true),
+            builder: (context)=>GridProduct(isScroll: false,data: cubit.placeOrderServiceModel!.data!,),
+          )),
+        )
       ],
     );
+  },
+);
   }
 }

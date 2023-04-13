@@ -25,9 +25,10 @@ class EditProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(MenuCubit.get(context).userModel!.data!.currentLatitude!.isNotEmpty)
-    nameController.text = MenuCubit.get(context).userModel!.data!.name!;
-    emailController.text = MenuCubit.get(context).userModel!.data!.email??'';
+    if(MenuCubit.get(context).userModel!=null){
+      nameController.text = MenuCubit.get(context).userModel!.data!.name!;
+      emailController.text = MenuCubit.get(context).userModel!.data!.email??'';
+    }
     return BlocConsumer<MenuCubit, MenuStates>(
   listener: (context, state) {
     if(state is UpdateUserSuccessState)Navigator.pop(context);

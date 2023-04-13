@@ -25,6 +25,7 @@ class _ChoosePhotoTypeState extends State<ChoosePhotoType> {
   void chooseImage(ImageSource source, BuildContext context) async {
     var cubit = MenuCubit.get(context);
     cubit.chatImage = await cubit.pick(source);
+    cubit.chatImage = await checkImageSize(cubit.chatImage);
     cubit.justEmit();
   }
 

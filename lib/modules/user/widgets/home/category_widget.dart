@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speed_co/layouts/user_layout/cubit/user_cubit.dart';
+import 'package:speed_co/layouts/user_layout/cubit/user_states.dart';
 import 'package:speed_co/shared/styles/colors.dart';
 
 import '../../../../models/user/categoies_model.dart';
 import '../../../../shared/images/images.dart';
 import '../../../item_shared/image_net.dart';
 
-class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({Key? key}) : super(key: key);
+class CategoryWidget extends StatelessWidget {
+   CategoryWidget({Key? key}) : super(key: key);
 
-  @override
-  State<CategoryWidget> createState() => _CategoryWidgetState();
-}
-
-class _CategoryWidgetState extends State<CategoryWidget> {
-
-  int currentIndex = 0;
   List<String> images = [
     Images.category1,
     Images.category2,
@@ -31,6 +26,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   @override
   Widget build(BuildContext context) {
     var cubit = UserCubit.get(context);
+    return BlocConsumer<UserCubit, UserStates>(
+  listener: (context, state) {},
+  builder: (context, state) {
     return SizedBox(
       height: 120,
       child: ListView.separated(
@@ -41,15 +39,15 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         scrollDirection: Axis.horizontal,
       ),
     );
+  },
+);
   }
 
   Widget itemBuilder(int index,CategoriesData model,BuildContext context){
     return InkWell(
       onTap: (){
-        setState(() {
-          currentIndex = index;
-          UserCubit.get(context).getService(model.id??'');
-        });
+        UserCubit.get(context).currentCategory = index;
+        UserCubit.get(context).getService(model.id??'');
       },
       overlayColor: MaterialStateProperty.all(Colors.transparent),
       child: Column(
@@ -61,9 +59,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               Container(
                 height: 90,width: 90,
                 decoration: BoxDecoration(
-                  color: defaultColor.withOpacity(.2),
-                  shape: BoxShape.circle,
-                  border:currentIndex == index?Border.all(color: defaultColor):null
+                    color: defaultColor.withOpacity(.2),
+                    shape: BoxShape.circle,
+                    border:UserCubit.get(context).currentCategory == index?Border.all(color: defaultColor):null
                 ),
               ),
               Container(
@@ -83,3 +81,4 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     );
   }
 }
+

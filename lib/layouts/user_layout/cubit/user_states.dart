@@ -35,6 +35,7 @@ class SearchWrongState extends UserStates {}
 class SearchErrorState extends UserStates {}
 
 
+
 class DateSuccessState extends UserStates {}
 class DateWrongState extends UserStates {}
 class DateErrorState extends UserStates {}

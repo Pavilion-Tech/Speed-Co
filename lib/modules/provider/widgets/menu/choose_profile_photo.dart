@@ -24,6 +24,7 @@ class _PChooseProfilePhotoTypeState extends State<PChooseProfilePhotoType> {
   void chooseImage(ImageSource source, BuildContext context) async {
     var cubit = ProviderMenuCubit.get(context);
     cubit.profileImage = await cubit.pick(source);
+    cubit.profileImage = await checkImageSize(cubit.profileImage);
     cubit.justEmit();
   }
 

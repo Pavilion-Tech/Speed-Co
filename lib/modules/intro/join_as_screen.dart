@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:speed_co/modules/auth/login_screen.dart';
 import 'package:speed_co/modules/provider/auth/sgin_up_screen.dart';
 import 'package:speed_co/modules/user/auth/sgin_up_screen.dart';
 import 'package:speed_co/shared/images/images.dart';
@@ -27,11 +27,11 @@ class JoinAsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Welcome',
+                  tr('welcome'),
                   style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 44),
                 ),
                 Text(
-                  'Register as a service provider or customer, one application brings you together, many great services and features are waiting for you.',
+                  tr('welcome_desc'),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),
                 ),
@@ -40,17 +40,17 @@ class JoinAsScreen extends StatelessWidget {
                   child: DefaultButton(
                     onTap: (){
                       isUser = true;
-                      navigateTo(context, SignUpScreen());
+                      navigateTo(context, SignUpScreen(haveArrow: true,));
                     },
-                    text: 'Ask for service',
+                    text: tr('ask_service'),
                   ),
                 ),
                 DefaultButton(
                   onTap: (){
                     isProvider = true;
-                    navigateTo(context, ProviderSignUpScreen());
+                    navigateTo(context, ProviderSignUpScreen(haveArrow: true,));
                   },
-                  text: 'Provide service',
+                  text: tr('provide_service'),
                 ),
               ],
             ),

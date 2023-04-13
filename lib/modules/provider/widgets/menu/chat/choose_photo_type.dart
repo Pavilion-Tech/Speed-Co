@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:speed_co/modules/provider/menu_screens/cubit/provider_menu_cubit.dart';
+import '../../../../../shared/components/components.dart';
 import '../../../../../shared/images/images.dart';
 import '../../../../item_shared/default_button.dart';
 import '../../../../user/widgets/menu/image_bottom.dart';
@@ -23,6 +24,7 @@ class _PChoosePhotoTypeState extends State<PChoosePhotoType> {
   void chooseImage(ImageSource source, BuildContext context) async {
     var cubit = ProviderMenuCubit.get(context);
     cubit.chatImage = await cubit.pick(source);
+    cubit.chatImage = await checkImageSize(cubit.chatImage);
     cubit.justEmit();
   }
 

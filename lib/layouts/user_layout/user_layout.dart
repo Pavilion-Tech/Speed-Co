@@ -26,6 +26,7 @@ class UserLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserCubit.get(context).checkUpdate(context);
     return BlocConsumer<UserCubit, UserStates>(
       listener: (context, state) {
         if(isConnect!=null)checkNet(context);

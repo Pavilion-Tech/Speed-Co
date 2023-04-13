@@ -101,5 +101,11 @@
   "reload": "Reload",
   "maintenance_title": "App Is Closed For Maintenance",
   "maintenance_desc": "We Are Making Some Fixes In the App For Improving the Quality Of Our Services",
-  "directions_wrong": "The distance is greater than the allowable limit"
+  "directions_wrong": "The distance is greater than the allowable limit",
+  "welcome": "Welcome",
+  "welcome_desc": "Register as a service provider or customer, one application brings you together, many great services and features are waiting for you.",
+  "ask_service": "Ask for service",
+  "provide_service": "Provide service",
+  "skip": "Skip",
+  "image_size": "Image Size Should Lower than 5 MB"
 }

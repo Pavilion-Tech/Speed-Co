@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speed_co/layouts/user_layout/user_layout.dart';
 import 'package:speed_co/modules/auth/auth_cubit/auth_cubit.dart';
 import 'package:speed_co/modules/auth/auth_cubit/auth_states.dart';
 import 'package:speed_co/modules/item_shared/default_button.dart';
@@ -14,8 +15,9 @@ import '../item_shared/default_form.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({this.haveArrow = false});
-  var formKey = GlobalKey<FormState>();
   bool haveArrow ;
+
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +34,22 @@ class LoginScreen extends StatelessWidget {
         return Scaffold(
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
-          appBar: haveArrow?AppBar(
+          appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
-            leading: IconButton(
+            leading:haveArrow? IconButton(
               onPressed: ()=>Navigator.pop(context),
               icon: Icon(Icons.arrow_back_ios_outlined,color: Colors.white,),
-            ),
-          ):null,
+            ):SizedBox(),
+            actions: [
+              TextButton(
+                  onPressed: ()=>navigateAndFinish(context, UserLayout()),
+                  child: Text(
+                      tr('skip'),
+                    style: TextStyle(color: Colors.white),
+                  ))
+            ],
+          ),
           body: Form(
             key: formKey,
             child: Column(

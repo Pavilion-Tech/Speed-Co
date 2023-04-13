@@ -24,6 +24,7 @@ class _ChooseProfilePhotoTypeState extends State<ChooseProfilePhotoType> {
   void chooseImage(ImageSource source, BuildContext context) async {
     var cubit = MenuCubit.get(context);
     cubit.profileImage = await cubit.pick(source);
+    cubit.profileImage = await checkImageSize(cubit.profileImage);
     cubit.justEmit();
   }
 

@@ -161,6 +161,7 @@ class MenuCubit extends Cubit<MenuStates> {
   void getUser() {
     if (token != null)
       DioHelper.getData(url: userUrl, token: 'Bearer $token',lang: myLocale).then((value) {
+        print(value.data);
         if (value.data['data'] != null) {
           userModel = UserModel.fromJson(value.data);
           emit(GetUserSuccessState());
@@ -178,6 +179,7 @@ class MenuCubit extends Cubit<MenuStates> {
           emit(GetUserWrongState());
         }
       }).catchError((e) {
+        print(e.toString());
         showToast(msg: tr('wrong'));
         emit(GetUserErrorState());
       });

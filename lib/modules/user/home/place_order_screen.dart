@@ -255,37 +255,49 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
 
   Widget itemBuilder(int index,DateData data){
     return InkWell(
-      onTap: (){
+      onTap:data.status == 'work' ? (){
         setState(() {
           currentDay = index;
         });
-      },
-      child: Container(
-        height: 65,
-        decoration: BoxDecoration(
-          color: currentDay == index?defaultColor.withOpacity(.3):Colors.grey.shade200,
-          border: Border.all(color:currentDay == index?defaultColor:Colors.grey),
-          borderRadius: BorderRadiusDirectional.circular(12)
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        alignment: AlignmentDirectional.centerStart,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              data.weekDay??'',
-              style: TextStyle(
-                color: Colors.black,fontWeight: FontWeight.w500
-              ),
+      }:null,
+      child: Stack(
+        children: [
+          Container(
+            height: 65,
+            decoration: BoxDecoration(
+              color: currentDay == index?defaultColor.withOpacity(.3):Colors.grey.shade200,
+              border: Border.all(color:currentDay == index?defaultColor:Colors.grey),
+              borderRadius: BorderRadiusDirectional.circular(12)
             ),
-            // Text(
-            //   'Feb 04',
-            //   style: TextStyle(
-            //     color: Colors.grey.shade700,fontWeight: FontWeight.w500,fontSize: 10
-            //   ),
-            // ),
-          ],
-        ),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            alignment: AlignmentDirectional.centerStart,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  data.weekDay??'',
+                  style: TextStyle(
+                    color: Colors.black,fontWeight: FontWeight.w500
+                  ),
+                ),
+                // Text(
+                //   'Feb 04',
+                //   style: TextStyle(
+                //     color: Colors.grey.shade700,fontWeight: FontWeight.w500,fontSize: 10
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          if(data.status != 'work')
+          Container(
+            height: 65,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade300.withOpacity(.6),
+                borderRadius: BorderRadiusDirectional.circular(12)
+            ),
+          ),
+        ],
       ),
     );
   }

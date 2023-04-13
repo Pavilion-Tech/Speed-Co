@@ -33,19 +33,19 @@ void navigateAndFinish(context, widget) {
   );
 }
 
-// Future<XFile?> checkImageSize (XFile? image)async{
-//   if(image!=null) {
-//     final bytes = (await image.readAsBytes()).lengthInBytes;
-//     final kb = bytes / 1024;
-//     final mb = kb / 1024;
-//     if(mb<5.0){
-//       return image;
-//     }else {
-//       showToast(msg: tr('image_size'));
-//       return null;
-//     }
-//   }
-// }
+Future<XFile?> checkImageSize (XFile? image)async{
+  if(image!=null) {
+    final bytes = (await image.readAsBytes()).lengthInBytes;
+    final kb = bytes / 1024;
+    final mb = kb / 1024;
+    if(mb<5.0){
+      return image;
+    }else {
+      showToast(msg: tr('image_size'));
+      return null;
+    }
+  }
+}
 
 Future<void> openUrl(String url) async {
   print(url);
