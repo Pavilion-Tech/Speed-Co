@@ -72,7 +72,8 @@ class OurApp extends StatelessWidget {
           children: [
             InkWell(
                 onTap: ()=>openUrl('https://pavilion-teck.com/'),
-                child: Image.asset(Images.pavilion,width: 87,height: 20,)),
+                child: Image.asset(Images.pavilion,width: 87,height: 20,)
+            ),
             const SizedBox(height: 20,),
             Center(
               child: DefaultButton(
