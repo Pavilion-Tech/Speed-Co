@@ -29,6 +29,7 @@ class ChatHistoryWrongState extends ProviderMenuStates{}
 class ChatHistoryErrorState extends ProviderMenuStates{}
 
 class SendMessageLoadingState extends ProviderMenuStates{}
+class SendMessageWithFileLoadingState extends ProviderMenuStates{}
 class SendMessageSuccessState extends ProviderMenuStates{}
 class SendMessageWrongState extends ProviderMenuStates{}
 class SendMessageErrorState extends ProviderMenuStates{}

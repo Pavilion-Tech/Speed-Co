@@ -1,12 +1,21 @@
+import 'dart:io';
+
+import 'package:audio_session/audio_session.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../../../shared/images/images.dart';
-import '../../../../../shared/styles/colors.dart';
 import '../../../../item_shared/default_button.dart';
+import '../../../menu_screens/menu_cubit/menu_cubit.dart';
 
 class VoiceDialog extends StatefulWidget {
+
+  VoiceDialog(this.id);
+
+  String id;
+
+
 
   @override
   State<VoiceDialog> createState() => _VoiceDialogState();
@@ -14,12 +23,15 @@ class VoiceDialog extends StatefulWidget {
 
 class _VoiceDialogState extends State<VoiceDialog> {
 
+
   final recorder = FlutterSoundRecorder();
+
+  String pathToAudio = '';
 
   @override
   void initState(){
-    super.initState();
     init();
+    super.initState();
   }
 
   @override
@@ -31,16 +43,52 @@ class _VoiceDialogState extends State<VoiceDialog> {
   }
 
   Future init ()async{
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+      avAudioSessionCategoryOptions:
+      AVAudioSessionCategoryOptions.allowBluetooth |
+      AVAudioSessionCategoryOptions.defaultToSpeaker,
+      avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+      avAudioSessionRouteSharingPolicy:
+      AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.speech,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.voiceCommunication,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
     await recorder.openRecorder().then((value) async{
       await start();
-
     });
   }
 
+
   Future start ()async{
-    await recorder.startRecorder(toFile: 'audio');
+    if (Platform.isIOS) {
+      var directory = await getTemporaryDirectory();
+      pathToAudio = directory.path + '/';
+    } else {
+      pathToAudio = '/sdcard/Download/appname/';
+    }
+    await recorder.startRecorder(
+      toFile:filePathName(),
+    );
     await recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
+    setState(() {});
   }
+
+  String filePathName() =>
+      pathToAudio +
+          DateTime.now().month.toString() +
+          DateTime.now().day.toString() +
+          DateTime.now().hour.toString() +
+          DateTime.now().minute.toString() +
+          DateTime.now().second.toString() +
+          (Platform.isIOS ? ".mp4" : ".m4a");
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +135,12 @@ class _VoiceDialogState extends State<VoiceDialog> {
                   child:DefaultButton(
                       text: tr('continue'),
                       onTap: ()async{
-                        final path =
-                        await recorder.stopRecorder();
+                        final path = await recorder.stopRecorder();
+                        MenuCubit.get(context).sendMessageWithFile(
+                            id: widget.id,
+                            type: 3,
+                            file: File(path!)
+                        );
                         Navigator.pop(context);
                       }
                   ),

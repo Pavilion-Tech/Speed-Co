@@ -50,7 +50,11 @@ class _PChatScreenState extends State<PChatScreen> {
           builder: (context, state) {
             return Column(
               children: [
-                Expanded(child: PChatBody()),
+                ConditionalBuilder(
+                    condition: ProviderMenuCubit.get(context).chatModel!=null,
+                    fallback: (context)=>Expanded(child: const Center(child:  CircularProgressIndicator())),
+                    builder: (context)=> PChatBody()
+                ),
                 ConditionalBuilder(
                   condition: ProviderMenuCubit.get(context).chatModel!=null,
                     fallback: (context)=>SizedBox(),

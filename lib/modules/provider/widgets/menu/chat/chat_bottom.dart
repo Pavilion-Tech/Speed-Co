@@ -1,10 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:speed_co/modules/provider/menu_screens/cubit/provider_menu_cubit.dart';
 import 'package:speed_co/modules/provider/menu_screens/cubit/provider_menu_states.dart';
+import 'package:speed_co/modules/provider/widgets/menu/chat/voice_dialog.dart';
+import '../../../../../shared/components/components.dart';
 import '../../../../../shared/images/images.dart';
 import '../../../../../shared/styles/colors.dart';
+import '../../../../user/widgets/menu/chat/voice_dialog.dart';
 import 'choose_photo_type.dart';
 
 class PChatBottom extends StatelessWidget {
@@ -53,35 +57,35 @@ class PChatBottom extends StatelessWidget {
                 )
             ),
             const SizedBox(width: 5,),
-            // state is! SendMessageWithFileLoadingState?
-            //  InkWell(
-            //    onTap: () async {
-            //      var status = await Permission.microphone.request();
-            //      if (status != PermissionStatus.granted) {
-            //        showToast(msg: 'Microphone permission not granted');
-            //        await openAppSettings();
-            //      } else {
-            //        showDialog(
-            //            context: context,
-            //            builder: (context) => VoiceDialog()
-            //        );
-            //      }
-            //    },
-            //    child: Container(
-            //      height: 45,
-            //      width: 45,
-            //      decoration: BoxDecoration(
-            //          color: Colors.white,
-            //          borderRadius: BorderRadiusDirectional.circular(15)
-            //      ),
-            //      alignment: AlignmentDirectional.center,
-            //      child: Padding(
-            //        padding: const EdgeInsets.all(12.0),
-            //        child: Image.asset(Images.microPhone),
-            //      ),
-            //    ),
-            //  ),
-            //:const CircularProgressIndicator(),
+            state is! SendMessageWithFileLoadingState?
+             InkWell(
+               onTap: () async {
+                 var status = await Permission.microphone.request();
+                 if (status != PermissionStatus.granted) {
+                   showToast(msg: 'Microphone permission not granted');
+                   await openAppSettings();
+                 } else {
+                   showDialog(
+                       context: context,
+                       builder: (context) => PVoiceDialog(id)
+                   );
+                 }
+               },
+               child: Container(
+                 height: 45,
+                 width: 45,
+                 decoration: BoxDecoration(
+                     color: Colors.white,
+                     borderRadius: BorderRadiusDirectional.circular(15)
+                 ),
+                 alignment: AlignmentDirectional.center,
+                 child: Padding(
+                   padding: const EdgeInsets.all(12.0),
+                   child: Image.asset(Images.microPhone),
+                 ),
+               ),
+             )
+            :const CircularProgressIndicator(),
             const SizedBox(width: 5,),
             state is! SendMessageLoadingState ?
             InkWell(

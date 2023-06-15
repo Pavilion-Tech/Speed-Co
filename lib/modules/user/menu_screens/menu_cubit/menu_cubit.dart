@@ -477,5 +477,36 @@ class MenuCubit extends Cubit<MenuStates> {
       emit(SendMessageErrorState());
     });
   }
+
+  void sendMessageWithFile({
+    required String id,
+    required int type,
+    required File file,
+  }){
+    FormData formData = FormData.fromMap({
+      'order_id':id,
+      'message_type':type,
+      'uploaded_message_file':MultipartFile.fromFileSync(file.path,
+          filename: file.path.split('/').last),
+    });
+    emit(SendMessageWithFileLoadingState());
+    DioHelper.postData2(
+        url: sendMessageUrl,
+        token: 'Bearer $token',
+        lang: myLocale,
+        formData:formData
+    ).then((value) {
+      if(value.data['status']==true){
+        chat(id);
+        emit(SendMessageSuccessState());
+      }else{
+        showToast(msg: tr('wrong'));
+        emit(SendMessageWrongState());
+      }
+    }).catchError((e){
+      showToast(msg: tr('wrong'));
+      emit(SendMessageErrorState());
+    });
+  }
 }
 

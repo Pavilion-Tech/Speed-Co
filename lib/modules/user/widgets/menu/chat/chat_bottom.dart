@@ -56,35 +56,35 @@ class ChatBottom extends StatelessWidget {
                 )
             ),
             const SizedBox(width: 5,),
-            // state is! SendMessageWithFileLoadingState?
-            //  InkWell(
-            //    onTap: () async {
-            //      var status = await Permission.microphone.request();
-            //      if (status != PermissionStatus.granted) {
-            //        showToast(msg: 'Microphone permission not granted');
-            //        await openAppSettings();
-            //      } else {
-            //        showDialog(
-            //            context: context,
-            //            builder: (context) => VoiceDialog()
-            //        );
-            //      }
-            //    },
-            //    child: Container(
-            //      height: 45,
-            //      width: 45,
-            //      decoration: BoxDecoration(
-            //          color: Colors.white,
-            //          borderRadius: BorderRadiusDirectional.circular(15)
-            //      ),
-            //      alignment: AlignmentDirectional.center,
-            //      child: Padding(
-            //        padding: const EdgeInsets.all(12.0),
-            //        child: Image.asset(Images.microPhone),
-            //      ),
-            //    ),
-            //  ),
-            //:const CircularProgressIndicator(),
+            state is! SendMessageWithFileLoadingState?
+             InkWell(
+               onTap: () async {
+                 var status = await Permission.microphone.request();
+                 if (status != PermissionStatus.granted) {
+                   showToast(msg: 'Microphone permission not granted');
+                   await openAppSettings();
+                 } else {
+                   showDialog(
+                       context: context,
+                       builder: (context) => VoiceDialog(id)
+                   );
+                 }
+               },
+               child: Container(
+                 height: 45,
+                 width: 45,
+                 decoration: BoxDecoration(
+                     color: Colors.white,
+                     borderRadius: BorderRadiusDirectional.circular(15)
+                 ),
+                 alignment: AlignmentDirectional.center,
+                 child: Padding(
+                   padding: const EdgeInsets.all(12.0),
+                   child: Image.asset(Images.microPhone),
+                 ),
+               ),
+             )
+            :const CircularProgressIndicator(),
             const SizedBox(width: 5,),
             state is! SendMessageLoadingState ?
             InkWell(

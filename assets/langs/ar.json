@@ -89,7 +89,7 @@
   "completed": "مكتمل",
   "subject_empty": "يجب ان لا يكون الموضوع فارغا",
   "desc_empty": "يجب ان لا يكون الوصف فارغا",
-  "no_service_yet": "لا يوجد خدمات حتي الان",
+  "no_service_yet": "لا توجد طلبات لهذا القسم",
   "no_requests_yet": "لا يوجد طلبات حتي الان",
   "no_notifications_yet": "لا يوجد اشعارات حتي الان",
   "select_service": "اختار الخدمه",

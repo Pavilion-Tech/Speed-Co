@@ -41,3 +41,9 @@ class SendMessageWrongState extends MenuStates{}
 class SendMessageErrorState extends MenuStates{}
 
 
+class SendMessageWithFileLoadingState extends MenuStates{}
+class SendMessageWithSuccessState extends MenuStates{}
+class SendMessageWithWrongState extends MenuStates{}
+class SendMessageWithErrorState extends MenuStates{}
+
+

@@ -46,7 +46,11 @@ class _ChatScreenState extends State<ChatScreen> {
           builder: (context, state) {
             return Column(
               children: [
-                Expanded(child: ChatBody()),
+                ConditionalBuilder(
+                    condition: MenuCubit.get(context).chatModel!=null,
+                    fallback: (context)=>Expanded(child: const Center(child:  CircularProgressIndicator())),
+                    builder: (context)=> ChatBody()
+                ),
                 ConditionalBuilder(
                     condition: MenuCubit.get(context).chatModel!=null,
                     fallback: (context)=>SizedBox(),

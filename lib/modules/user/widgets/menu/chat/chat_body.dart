@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:speed_co/modules/user/widgets/menu/chat/record_item.dart';
 import '../../../../../models/chat_model.dart';
 import '../../../../../shared/components/components.dart';
@@ -9,131 +10,124 @@ import '../../../../../shared/styles/colors.dart';
 import '../../../../item_shared/image_net.dart';
 import '../../../../item_shared/image_zoom.dart';
 import '../../../menu_screens/menu_cubit/menu_cubit.dart';
+enum Type{text,image,record}
 
 class ChatBody extends StatelessWidget {
   const ChatBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var cubit = MenuCubit.get(context);
-    return ConditionalBuilder(
-        condition: cubit.chatModel!=null,
-        fallback: (context)=>const Center(child: CircularProgressIndicator(),),
-        builder: (context)=> ConditionalBuilder(
-            condition: cubit.chatModel!.data!.messages!.isNotEmpty,
-            fallback: (context)=>const SizedBox(),
-            builder: (context)=> ListView.separated(
-              itemCount: cubit.chatModel!.data!.messages!.length,
-              separatorBuilder: (c,i)=>const SizedBox(height: 20,),
-              itemBuilder: (c,i)=>ConditionalBuilder(
-                  condition: cubit.chatModel!.data!.messages![i].sender != 'user',
-                  builder: (c)=>SenderChat(cubit.chatModel!.data!.messages![i]),
-                  fallback: (c)=>UserChat(cubit.chatModel!.data!.messages![i])
-              ),
-            )
-        )
-    );  }
-}
-
-class SenderChat extends StatelessWidget {
-  SenderChat(this.messages);
-  Messages messages;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Container(
-        //   height: 36,width: 36,
-        //   decoration: BoxDecoration(shape: BoxShape.circle),
-        //   clipBehavior: Clip.antiAliasWithSaveLayer,
-        //   child: Image.asset(Images.homePhoto,fit: BoxFit.cover,),
-        // ),
-        // const SizedBox(width: 10,),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              messages.createdAt??'',
-              style: TextStyle(fontSize: 11),
-            ),
-            Container(
-              width: size!.width*.7,
-              decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadiusDirectional.only(
-                    topEnd: Radius.circular(20),
-                    bottomEnd: Radius.circular(20),
-                    bottomStart: Radius.circular(20),
-                  )
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              padding:messages.messageType==1?const EdgeInsets.symmetric(horizontal: 15,vertical: 10):null,
-              child: ConditionalBuilder(
-                condition: messages.messageType==1,
-                fallback: (c)=>InkWell(
-                    onTap: (){
-                      navigateTo(context, ImageZoom(messages.message??''));
-                    },
-                    child: ImageNet(image: messages.message??'',height: 200,)),
-                builder: (c)=> Text(
-                  messages.message??'',
-                  style: TextStyle(fontSize: 11),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+    var messages = MenuCubit.get(context).chatModel!.data!.messages!;
+    return Expanded(
+      child: ListView.separated(
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (c,i)=>ChatItem(
+            type: messages[i].messageType == 1 ?Type.text:messages[i].messageType == 2?Type.image:Type.record,
+            content: messages[i].message??'',
+            createdAt:  messages[i].createdAt??'',
+            isUser: messages[i].sender == 'user'?true:false,
+          ),
+          separatorBuilder: (c,i)=>const SizedBox(height: 15,),
+          itemCount: messages.length
+      ),
     );
   }
 }
 
-class UserChat extends StatelessWidget {
-  UserChat(this.messages);
-  Messages messages;
+class ChatItem extends StatelessWidget {
+  ChatItem({
+    required this.isUser,
+    required this.type,
+    required this.content,
+    required this.createdAt,
+  });
+
+
+  bool isUser;
+  Type type;
+  String content;
+  String createdAt;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
+    return Padding(
+      padding: EdgeInsetsDirectional.only(
+          end: isUser?0:30,start: isUser?30:0
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: isUser?CrossAxisAlignment.end:CrossAxisAlignment.start,
         children: [
           Text(
-            messages.createdAt??'',
-            style: TextStyle(fontSize: 11),
+            createdAt,
+            style: TextStyle(
+                color: defaultColorFour,fontSize: 11
+            ),
           ),
-          Container(
-              width: size!.width*.7,
-              decoration: BoxDecoration(
-                  color: defaultColor,
-                  borderRadius: BorderRadiusDirectional.only(
-                    topStart: Radius.circular(20),
-                    bottomEnd: Radius.circular(20),
-                    bottomStart: Radius.circular(20),
-                  )
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              padding:messages.messageType==1?const EdgeInsets.symmetric(horizontal: 15,vertical: 10):null,
-              child: ConditionalBuilder(
-                condition: messages.messageType==1,
-                fallback: (c)=>InkWell(
-                    onTap: (){
-                      navigateTo(context, ImageZoom(messages.message??''));
-                    },
-                    child: ImageNet(image: messages.message??'',height: 200,)),
-                builder: (c)=>Text(
-                  messages.message??'',
-                  style: TextStyle(fontSize: 11,color: Colors.white),
-                  textAlign: TextAlign.end,
-                ),
-              )
+          Builder(builder: (BuildContext context) {
+            switch(type){
+              case Type.text:
+                return
+                  Container(
+                      decoration: BoxDecoration(
+                        color: isUser?defaultColor:HexColor('#EEEEEE'),
+                        borderRadius: BorderRadiusDirectional.only(
+                          topStart:Radius.circular(isUser?20:0),
+                          topEnd: Radius.circular(isUser?0:20),
+                          bottomEnd: const Radius.circular(20),
+                          bottomStart:const  Radius.circular(20),
+                        ),
+                      ),
+                      padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 2),
+                      child:Text(
+                        content,
+                        textAlign: isUser?TextAlign.end:TextAlign.start,
+                        style: TextStyle(
+                            color: isUser?Colors.white:null,fontSize: 11
+                        ),
+                      )
+                  );
+              case Type.image:
+                return InkWell(
+                  onTap: ()=>navigateTo(context, ImageZoom(content)),
+                  child: Container(
+                      height: 129,width: size!.width*.6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadiusDirectional.only(
+                          topStart:Radius.circular(isUser?20:0),
+                          topEnd: Radius.circular(isUser?0:20),
+                          bottomEnd:const Radius.circular(20),
+                          bottomStart:const Radius.circular(20),
+                        ),
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child:ImageNet(image: content,)
+                  ),
+                );
+              case Type.record:
+                return Container(
+                    decoration: BoxDecoration(
+                      color: isUser?defaultColor:HexColor('#EEEEEE'),
+                      borderRadius: BorderRadiusDirectional.only(
+                        topStart:Radius.circular(isUser?20:0),
+                        topEnd: Radius.circular(isUser?0:20),
+                        bottomEnd:const Radius.circular(20),
+                        bottomStart:const Radius.circular(20),
+                      ),
+                    ),
+                    padding:const EdgeInsets.symmetric(horizontal: 10),
+                    child:RecordItem(url: content,timeColor:isUser? Colors.white:Colors.grey,)
+                );
+              default:
+                return const SizedBox();
+            }
+          },
+
           ),
         ],
       ),
     );
   }
 }
+
 
 
