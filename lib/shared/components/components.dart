@@ -93,12 +93,12 @@ Future<void> openUrl(String url) async {
 
 
 
-Future showToast ({required String msg , bool? toastState})
+Future showToast ({required String msg , bool? toastState,ToastGravity gravity = ToastGravity.BOTTOM})
 {
  return Fluttertoast.showToast(
    msg: msg,
    toastLength: Toast.LENGTH_LONG,
-   gravity: ToastGravity.BOTTOM,
+   gravity: gravity,
    timeInSecForIosWeb: 5,
    textColor: Colors.white,
    fontSize: 16.0,

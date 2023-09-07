@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:speed_co/layouts/provider_layout/provider_layout.dart';
 import 'package:speed_co/layouts/user_layout/user_layout.dart';
 import 'package:speed_co/modules/auth/auth_cubit/auth_cubit.dart';
@@ -52,7 +53,7 @@ class _VerificationSheetState extends State<VerificationSheet> {
   @override
   void initState() {
     startTimer();
-    showToast(msg: '${tr('code_is')} $code');
+    showToast(msg: '${tr('code_is')} $code',gravity: ToastGravity.CENTER);
     super.initState();
   }
 
@@ -96,89 +97,93 @@ class _VerificationSheetState extends State<VerificationSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthStates>(
-      listener: (context, state) {
-        if(state is VerifyUserSuccessState)
-          navigateAndFinish(context, UserLayout());
-        if(state is VerifyProviderSuccessState)
-          navigateAndFinish(context, ProviderLayout());
-      },
-      builder: (context, state) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 80),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  alignment: AlignmentDirectional.topCenter,
-                  children: [
-                    Image.asset(Images.verifyCurve),
-                    Image.asset(
-                      Images.background,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      color: Colors.white,
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            tr('verification'),
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          if (!timerFinished)
-                            Text(
-                              '00:$_start',
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          if (timerFinished)
-                            InkWell(
-                              onTap: () {
-                                AuthCubit.get(context).login();
-                                timer;
-                                _start = 60;
-                                timerFinished = false;
-                                startTimer();
-                              },
-                              child: Text(
-                                tr('try_again'),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                        ],
+    return InkWell(
+      onTap: ()=>FocusManager.instance.primaryFocus!.unfocus(),
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
+      child: BlocConsumer<AuthCubit, AuthStates>(
+        listener: (context, state) {
+          if(state is VerifyUserSuccessState)
+            navigateAndFinish(context, UserLayout());
+          if(state is VerifyProviderSuccessState)
+            navigateAndFinish(context, ProviderLayout());
+        },
+        builder: (context, state) {
+          return Padding(
+            padding:
+                EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 80),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    alignment: AlignmentDirectional.topCenter,
+                    children: [
+                      Image.asset(Images.verifyCurve),
+                      Image.asset(
+                        Images.background,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        color: Colors.white,
                       ),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: otp(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child:state is! VerifyLoadingState? DefaultButton(
-                      text: tr('verify'),
-                      onTap: () {
-                        submit(context);
-                      }):const Center(child: CircularProgressIndicator(),),
-                )
-              ],
+                      Align(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              tr('verification'),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            if (!timerFinished)
+                              Text(
+                                '00:$_start',
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            if (timerFinished)
+                              InkWell(
+                                onTap: () {
+                                  AuthCubit.get(context).login();
+                                  timer;
+                                  _start = 60;
+                                  timerFinished = false;
+                                  startTimer();
+                                },
+                                child: Text(
+                                  tr('try_again'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: otp(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child:state is! VerifyLoadingState? DefaultButton(
+                        text: tr('verify'),
+                        onTap: () {
+                          submit(context);
+                        }):const Center(child: CircularProgressIndicator(),),
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
